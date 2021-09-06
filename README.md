@@ -1,5 +1,11 @@
 To run the following code setup Jekyll on your computer
 
+Refer: https://jekyllrb.com/docs/installation/ubuntu/
+Refer: https://jekyllrb.com/docs/step-by-step/01-setup/
+
+The above links should follow the same procedure as shown below:
+(Please recheck below commands with above links to stay updated)
+
 Jekyll + Ruby Installation:
 
 1. sudo apt-get install ruby-full build-essential zlib1g-dev
