@@ -18,4 +18,4 @@ For example jekyll project do
 
 Or clone the repo in local machine and run the following command within the working directory:
 
-<bundle exec jekyll serve>
+bundle exec jekyll serve
