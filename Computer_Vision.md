@@ -419,4 +419,5 @@ The below code shows how to find gradient using the 1D numpy.gradient() function
 gradients = numpy.gradient(img)
 x_grad = gradients[0]
 y_grad = gradients[1]
+
 ```
