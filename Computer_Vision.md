@@ -2,7 +2,7 @@
 layout: page
 title: CV Edge Detection and Filters
 permalink: /CV Concepts/
-nav_order: 6
+nav_order: 9
 ---
 
 <details open markdown="block">
@@ -20,9 +20,11 @@ nav_order: 6
 [Youtube Lectures](https://www.youtube.com/playlist?list=PLmyoWnoyCKo8epWKGHAm4m_SyzoYhslk5){: .btn .fs-5 .mb-4 .mb-md-0 } [Reference Notes](https://www.crcv.ucf.edu/courses/cap5415-fall-2014/){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 
-The terms convolution is used in a very loose manner and when people say convolution, they mostly mean correlation.
+The terms convolution is used in a very loose manner and when people say convolution, they mostly mean correlation. However, in our code, we will follow strictly the definition of convolution by flipping the kernel accordingly.
 
-Also, people include the aspects of filtering (i.e taking a kernel and running it over an image) in the overarching term 'Convolution'
+<i> Note that if we have a symmetric kernel, then convolution and correlation would be the same
+
+Also, people include the aspects of filtering (i.e taking a kernel and running it over an image) in the overarching term 'Convolution'.
 
 # Basics
 

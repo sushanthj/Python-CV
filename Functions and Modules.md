@@ -18,7 +18,7 @@ nav_order: 4
 
 ## The str dir and callable Functions
 
-1 str function
+1. str function
 
 str coerces data into a string. Every datatype can be coerced into a string
 
@@ -35,7 +35,7 @@ str coerces data into a string. Every datatype can be coerced into a string
 "<module 'odbchelper' from 'c:\\docbook\\dip\\py\\odbchelper.py'>"
 ```
 
-2 dir function
+2. dir function
 
 This function returns a list of all possible methods in a list/dict/module
 
@@ -55,7 +55,7 @@ This function returns a list of all possible methods in a list/dict/module
 ```
 
 
-3 callable funciton
+3. callable funciton
 
 It takes any object as input and returs <True> if the object can be called or returns <False> if uncallable
 
@@ -127,7 +127,7 @@ output_html, output_xml, output_text
 
 Now let's have a main output program which takes statstout as an input.
 
-Here we see the power of the getattr function of accepting strings and relating them to module functions.
+Here we see the power of the getattr function of accepting strings and relating them to module functions. Also, with this getattr, <b> we may/may not define an attribute to statsout.
 
 ```
 import statsout
@@ -140,3 +140,7 @@ The return output_function statement runs the particular function in statstout b
 which is in turn based on the argument given to def output(data, format="text")
 
 Note that we give getattr a third argument, which works as the default value in case the second argument is unavailable
+
+## Lambda Funcitons
+
+These are 'one-line' functions which can be called like any other function

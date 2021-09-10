@@ -18,7 +18,7 @@ nav_order: 3
 
 ## Lists
 
-1  Slicing of Lists (common across numpy arrays as well)
+1\. Slicing of Lists (common across numpy arrays as well)
 
 ```
 >>> li
@@ -42,7 +42,7 @@ Important Points to note
 - li[1:4] outputs li[1], li[2] and li[3]
 
 
-2  Appending of Lists
+2\. Appending of Lists
 
 ```
 >>> li
@@ -62,7 +62,7 @@ Append adds a single element to the end of the list.
 Insert inserts a single element into a list at a specified location and the original placeholder at that index gets bumped to the next index
 Extend concatenates lists. 
 
-3  Removing Items
+3\. Removing Items
 
 ```
 >>> li
@@ -77,7 +77,7 @@ Extend concatenates lists.
 ['a', 'b', 'mpilgrim', 'example', 'new', 'two']
 ```
 
-4  List Operators
+4\. List Operators
 
 ```
 >>> li = ['a', 'b', 'mpilgrim']
@@ -92,7 +92,7 @@ Extend concatenates lists.
 [1, 2, 1, 2, 1, 2]
 ```
 
-5  Assignment to Variables
+5\. Assignment to Variables
 
 ```
 >>> range(7) = [1, 2, 3, 4, 5, 6]
@@ -102,7 +102,7 @@ Extend concatenates lists.
 0
 ```
 
-6  Looping in Lists
+6\. Looping in Lists
 
 ```
 >>> li = [1, 9, 8, 4]
@@ -120,7 +120,7 @@ the function elem*2 and appends that result to the returned list.
 
 ## Strings
 
-1  Formatting for I/O
+1. Formatting for I/O
 
 ```
 uid = "sa"
@@ -141,7 +141,7 @@ TypeError: cannot concatenate 'str' and 'int' objects
 Note here that (userCount,) is a tuple with one element. If we ask for only (userCount) python would throw an error
 
 
-2  Looping over Dictionary elemetns
+2. Looping over Dictionary elemetns
 
 ```
 >>> params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}
@@ -153,7 +153,7 @@ Note here that (userCount,) is a tuple with one element. If we ask for only (use
 ['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']
 ```
 
-3 Joining String items in a dictionary with a secondary string
+3. Joining String items in a dictionary with a secondary string
 
 You might have thought I meant that string variables are objects. But no, look closely at this example and
 you'll see that the string ";" itself is an object, and you are calling its join method.
@@ -168,7 +168,7 @@ delimiter doesn't need to be a semi−colon; it doesn't even need to be a single
 'server=mpilgrim;uid=sa;database=master;pwd=secret'
 ```
 
-4 Splitting a string
+4. Splitting a string
 
 Understand that split reverses join by splitting a string into a multi−element LIST. 
 
