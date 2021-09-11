@@ -120,7 +120,7 @@ the function elem*2 and appends that result to the returned list.
 
 ## Strings
 
-1. Formatting for I/O
+1\. Formatting for I/O
 
 ```
 uid = "sa"
@@ -141,7 +141,7 @@ TypeError: cannot concatenate 'str' and 'int' objects
 Note here that (userCount,) is a tuple with one element. If we ask for only (userCount) python would throw an error
 
 
-2. Looping over Dictionary elemetns
+2\. Looping over Dictionary elemetns
 
 ```
 >>> params = {"server":"mpilgrim", "database":"master", "uid":"sa", "pwd":"secret"}
@@ -153,7 +153,7 @@ Note here that (userCount,) is a tuple with one element. If we ask for only (use
 ['server=mpilgrim', 'uid=sa', 'database=master', 'pwd=secret']
 ```
 
-3. Joining String items in a dictionary with a secondary string
+3\. Joining String items in a dictionary with a secondary string
 
 You might have thought I meant that string variables are objects. But no, look closely at this example and
 you'll see that the string ";" itself is an object, and you are calling its join method.
@@ -168,7 +168,7 @@ delimiter doesn't need to be a semi−colon; it doesn't even need to be a single
 'server=mpilgrim;uid=sa;database=master;pwd=secret'
 ```
 
-4. Splitting a string
+4\. Splitting a string
 
 Understand that split reverses join by splitting a string into a multi−element LIST. 
 
@@ -220,6 +220,21 @@ print(len(name))
 ```
 str1 = [char for char in name]
 ```
+
+## Substituting specific words of a string
+
+there exists a built-in function called re.sub which can do the following:
+
+```
+import re
+>>> s = '100 NORTH MAIN ROAD'
+
+>>> re.sub('ROAD$', 'RD.', s)
+'100 NORTH BROAD RD.'
+```
+
+The module __re__ means __'regular expression'__
+Using the re.sub function, you search the string s for the regular expression 'ROAD$' and replace it with 'RD.'. <br> This matches the ROAD at the end of the string s, but does not match the ROAD that's part of the word BROAD, because that's in the middle of s.
 
 ## Looping over a list
 
