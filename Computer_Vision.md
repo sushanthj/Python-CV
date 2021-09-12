@@ -42,7 +42,7 @@ refer: [Conv vs Cross Conv](https://glassboxmedicine.com/2019/07/26/convolution-
 Here we use a simple np.ones((3,3)) kernel and do convolution calculate the sum of all neighbouring pixels.
 After that, we divide the sum by 9 (as 9 elements in the kernel)
 
-```
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
@@ -110,7 +110,7 @@ Also, we are padding the image correctly so that the loop can start at image[0,0
 ![](/images/B1.jpg)
 ![](/images/sobel_output.png)
 
-```
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
@@ -202,7 +202,7 @@ if __name__ == '__main__':
 
 To map the gaussian distribution onto a kernel, we'll use a function which generates gaussian numbers as a distribution
 
-```
+```python
 x, y = np.meshgrid(np.linspace(-1,1,3), np.linspace(-1,1,3))
 print(x)
 print(y)
@@ -240,7 +240,7 @@ y:
 
 Using the above gaussian matrix (the final output) as the kernel we do convolutions on the image
 
-```
+```python
 from avg_kernel import convolve2D
 import numpy as np
 import matplotlib.pyplot as plt
@@ -328,7 +328,7 @@ Method 1
 - Apply threshold to slope
 
 The first two steps are solved in below code
-```
+```python
 from avg_kernel import convolve2D
 import numpy as np
 import matplotlib.pyplot as plt
@@ -417,7 +417,7 @@ Method 2
 
 The below code shows how to find gradient using the 1D numpy.gradient() function
 
-```
+```python
 gradients = numpy.gradient(img)
 x_grad = gradients[0]
 y_grad = gradients[1]

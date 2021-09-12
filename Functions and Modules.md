@@ -18,7 +18,7 @@ nav_order: 4
 
 ## The str dir and callable Functions
 
-1. str function
+1\. str function
 
 str coerces data into a string. Every datatype can be coerced into a string
 
@@ -35,7 +35,7 @@ str coerces data into a string. Every datatype can be coerced into a string
 "<module 'odbchelper' from 'c:\\docbook\\dip\\py\\odbchelper.py'>"
 ```
 
-2. dir function
+2\. dir function
 
 This function returns a list of all possible methods in a list/dict/module
 
@@ -55,7 +55,7 @@ This function returns a list of all possible methods in a list/dict/module
 ```
 
 
-3. callable funciton
+3\. callable funciton
 
 It takes any object as input and returs <True> if the object can be called or returns <False> if uncallable
 
@@ -141,6 +141,37 @@ which is in turn based on the argument given to def output(data, format="text")
 
 Note that we give getattr a third argument, which works as the default value in case the second argument is unavailable
 
-## Lambda Funcitons
+## input and map functions
 
-These are 'one-line' functions which can be called like any other function
+```
+points = list()
+    for i in range(4):
+        a = list(map(float, input().split()))
+        points
+```
+
+__split__ is a string functions which splits the lines in a string.
+
+__map__ is an in-built function which uses two arguments: a function and an iterable(list or dict)
+
+```
+def addition(n):
+    return n*2
+
+numbers = {1:'one',2 : 'two', 3: 'three'}
+
+result = map(addition,numbers.values())
+
+print(list(result))
+
+>> ['oneone', 'twotwo', 'threethree']
+```
+
+## Typecasting and converting to list all while taking user input
+
+```
+a = list(map(float, input('enter value').split()))
+
+print(a)
+```
+

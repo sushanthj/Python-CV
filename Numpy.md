@@ -32,20 +32,20 @@ Numpy and Scipy are two resources to compute a variety of functions on matrices.
 In the below code we input an image and convert it into an array.
 Shape of an array is just it's size
 
-```
+```python
 im = array(Image.open('empire.jpg'))
 print im.shape, im.dtype
 
 ```
 The output would look lik this:
-```
+```python
 (800, 569, 3) uint8 (RGB image)
 ```
 ### Converting image to Greyscale
 
 This uses an extra library called Python Pillow
 
-```
+```python
 from PIL import Image, ImageOps
 im = array(Image.open('empire.jpg').convert('L'),'f')
 print im.shape, im.dtype
@@ -54,7 +54,7 @@ print im.shape, im.dtype
 
 ### Plotting an image
 
-```
+```python
 img = np.array(Image.open('House2.jpg'))
 plt.figure(figsize=(8,8))
 plt.imshow(img)
@@ -76,7 +76,7 @@ An image can have shape as (640,540,3). Here we need to think in the way that th
 
 ### sum() function in 1D
 
-```
+```python
 import numpy as np 
 arr = [20, 2, .2, 10, 4]  
    
@@ -87,7 +87,7 @@ print("Sum of arr(float32) : ", np.sum(arr, dtype = np.float32))
 ```
 Output:
 
-```
+```python
 Sum of arr :  36.2
 Sum of arr(uint8) :  36
 Sum of arr(float32) :  36.2
@@ -106,7 +106,7 @@ axis = 0 means it calculates sum of all elements in ith column and (i=1)th colum
 
 axis = 1 means it calculates sum of all elements in (j)th column and (j+1)th column..
 
-```
+```python
 arr = [[14, 17, 12, 33, 44],   
        [15, 6, 27, 8, 19],  
        [23, 2, 54, 1, 4,]]  
@@ -117,7 +117,7 @@ print("Sum of arr(axis = 1) : ", np.sum(arr, axis = 1))
 ```
 
 Output would be:
-```
+```python
 Sum of arr :  279
 Sum of arr(axis = 0) :  [52 25 93 42 67]
 Sum of arr(axis = 1) :  [120  75  84]
@@ -127,13 +127,13 @@ But notice how the vector of axis = 1 has been transposed to show as a row vecto
 
 We change that behaviour by adding a second argument to the sum() function:
 
-```
+```python
 print("\nSum of arr (keepdimension is True): \n",
       np.sum(arr, axis = 1, keepdims = True))
 ```
 
 Output
-```
+```python
 Sum of arr (keepdimension is True): 
  [[120]
  [ 75]
@@ -148,7 +148,7 @@ The shape of the image is given as a tuple eg. (640, 540, 3)
 - the last item of that tuple is the RGB spectrum (3 dimensions per pixel)
 - the first two items in the tuple is the actual size of the image
 
-```
+```python
 for i in range(img.shape[1]):
     print()
 
@@ -158,7 +158,7 @@ In the above code we are looping over the rows. Therefore we are looping 640 tim
 
 #### Method 1 : Consider this method of converting image into greyscale:
 
-```
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
@@ -185,7 +185,7 @@ This method uses averaging to find grayscale. However a slightly modified versio
 
 #### Method 2: Accounting for Luminance Perception
 
-```
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
@@ -208,7 +208,7 @@ plt.show()
 
 #### Method 3: Simpler code using numpy.mean
 
-```
+```python
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -239,7 +239,7 @@ plt.show()
 
 ## Reshaping Arrays
 
-```
+```python
 x = np.arange(4).reshape((2,2))
 x
 >>array([[0, 1],
@@ -250,8 +250,8 @@ x
 
 Simple transpose is done using the matrix.transpose() or matrix.T method (both are same). One of them is showed below:
 
-```
-(refer matrix x in above example)
+```python
+# (refer matrix x in above example)
 np.transpose(x)
 array([[0, 2],
        [1, 3]])
@@ -287,7 +287,7 @@ Remember that first two shapes are pages and rows. Hence, those two will interch
 
 Padding is used to ensure overall image size does not reduce while run filters/convulutions on it
 
-```
+```python
 import numpy as np
 
 x = np.ones(3)
@@ -304,7 +304,7 @@ ref: [newaxis](http://scipy-lectures.org/intro/numpy/array_object.html#indexing-
 
 This method can be used to convert a row vector to a column vector and at the same time add another dimension as shown below:
 
-```
+```python
 a = np.array([0,1,2])
 print(a.shape)
 ```
@@ -313,14 +313,14 @@ Output: (3,)
 
 Now lets do the newaxis modification:
 
-```
+```python
 c = (a[:, np.newaxis])
 print(c)
 print(c.shape)
 ```
 
 Output:
-```
+```python
 [[0]
  [1]
  [2]]

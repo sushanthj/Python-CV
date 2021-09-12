@@ -139,9 +139,9 @@ Similarly there exists os.path.isfile(pathname), which outputs 1 if it is a file
 
 ```
 
-# Regex re.search()
+# Regex
 
-## Mundane patterns
+## Mundane patterns and re.search()
 
 Let's define a pattern which we want to use as a baseline for comparison:
 
@@ -210,7 +210,7 @@ In Roman numerals, there are seven characters that are repeated and combined in 
 - D = 500
 - M = 1000
 
-## Matching normal digits and re.compile
+# Matching normal digits and re.compile
 
 Say we have phone numbers like __800-555-1212__
 
