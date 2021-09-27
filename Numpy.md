@@ -2,7 +2,7 @@
 layout: page
 title: Numpy
 permalink: /numpy/
-nav_order: 8
+nav_order: 9
 ---
 
 <details open markdown="block">

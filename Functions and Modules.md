@@ -22,7 +22,7 @@ nav_order: 4
 
 str coerces data into a string. Every datatype can be coerced into a string
 
-```
+```python
 >>> horsemen = ['war', 'pestilence', 'famine']
 
 >>> str(horsemen)
@@ -39,7 +39,7 @@ str coerces data into a string. Every datatype can be coerced into a string
 
 This function returns a list of all possible methods in a list/dict/module
 
-```
+```python
 >>> li = []
 >>> dir(li)
 ['append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
@@ -63,7 +63,7 @@ Let's take for example two built-in functions of the string module (these functi
 
 string.punctuation returns a string of possible characters to be used in a string. However, the function itself is not callable to be used elsewhere.
 
-```
+```python
 >>> string.punctuation
 '!"#$%&\'()*+,−./:;<=>?@[\\]^_`{|}~'
 
@@ -75,7 +75,7 @@ Now lets try a new built-in function <join>
 
 This function as we know can be called to join any two strings. Therefore:
 
-```
+```python
 >>> callable(string.join)
 True
 
@@ -91,7 +91,7 @@ The getattr function takes an input as a string, if that string referes to any m
 Closely look and understand the following example code. Also, note how the <pop> method is referenced as a string "pop".
 Also, see how calling a list function like pop without the parenthesis does a similar job
 
-```
+```python
 >>> li = ["Larry", "Curly"]
 
 >>> li.pop
@@ -112,7 +112,7 @@ In the last line we see that the getattr function inputs a blank dict, however i
 
 Note if we don't know what clear will do, we can always say:
 
-```
+```python
 d = {}
 print(d.clear.__doc__)
 ```
@@ -129,7 +129,7 @@ Now let's have a main output program which takes statstout as an input.
 
 Here we see the power of the getattr function of accepting strings and relating them to module functions. Also, with this getattr, <b> we may/may not define an attribute to statsout.
 
-```
+```python
 import statsout
 def output(data, format="text"):
 output_function = getattr(statsout, "output_%s" % format, statsout.output_text)
@@ -143,7 +143,7 @@ Note that we give getattr a third argument, which works as the default value in 
 
 ## input and map functions
 
-```
+```python
 points = list()
     for i in range(4):
         a = list(map(float, input().split()))
@@ -154,7 +154,7 @@ __split__ is a string functions which splits the lines in a string.
 
 __map__ is an in-built function which uses two arguments: a function and an iterable(list or dict)
 
-```
+```python
 def addition(n):
     return n*2
 
@@ -169,7 +169,7 @@ print(list(result))
 
 ## Typecasting and converting to list all while taking user input
 
-```
+```python
 a = list(map(float, input('enter value').split()))
 
 print(a)

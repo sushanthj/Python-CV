@@ -164,6 +164,8 @@ re.findall(r'\w', 'http://hackerrank.com/')
 >>>['h', 't', 't', 'p', 'w', 'w', 'w', 'h', 'a', 'c', 'k', 'e', 'r', 'r', 'a', 'n', 'k', 'c', 'o', 'm']
 ```
 
+However, we can replace `\w` with `\w+` to extract only words from the string
+
 ## finditer()
 
 This expression returns a callable iterable object (iterator) over non-overlapping matches in string
@@ -284,4 +286,28 @@ pattern = re.findall("(?=[%s]([%s]{2,})[%s])"%(c,v,c),input(), re.I)
 
 for i in range(len(pattern)):
     print(pattern[i])
+```
+
+## Example: Extracting only words from a string and index all words in a dictionary
+
+```python
+def get_words(inp_string):
+
+  string_to_split = str(inp_string)
+  pattern = '[A-Za-z]+'
+  split_list = re.findall(pattern, string_to_split)
+  return split_list
+
+def create_dictionary(messages):
+
+  word_dictionary = {}
+    word_count = 0
+    for i in range(messages.shape[0]):
+        temp_list = get_words(messages[i])
+        for j in range(len(temp_list)):
+            if temp_list[j] not in word_dictionary.values():
+                word_dictionary[word_count] = temp_list[j]
+                word_count += 1
+
+    return word_dictionary
 ```
