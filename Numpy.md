@@ -2,7 +2,7 @@
 layout: page
 title: Numpy
 permalink: /numpy/
-nav_order: 9
+nav_order: 10
 ---
 
 <details open markdown="block">
@@ -29,7 +29,7 @@ Numpy and Scipy are two resources to compute a variety of functions on matrices.
 
 ### Importing Images 
 
-In the below code we input an image and convert it into an array.
+In the below code we input an image and convert it into an array. \
 Shape of an array is just it's size
 
 ```python
@@ -227,7 +227,7 @@ plt.show()
 
 ## Plotting a pixel-wise histogram
 
-```
+```python
 img = np.array(Image.open('emma_stone.jpg'))
 img_flat = img.flatten()
 plt.hist(img_flat, bins=200, range=[0, 256])
@@ -332,3 +332,39 @@ Therefore we can see that the vector has been rotated and another dimension has 
 ## einsum 
 
 Refer to this document: [einsum](https://ajcr.net/Basic-guide-to-einsum/)
+
+## Stacking rows using vstack
+
+We can use this function to stack rows onto an exiting numpy array.
+
+```python
+in_arr1 = geek.array([ 1, 2, 3] )
+  
+in_arr2 = geek.array([ 4, 5, 6] )
+  
+# Stacking the two arrays vertically
+out_arr = geek.vstack((in_arr1, in_arr2))
+print (out_arr)
+```
+
+Practically we can use this in a specific case. If we don't know the number of rows we will be adding to a numpy array:
+
+- We will define the array as a 0 row array
+- We then add rows as we progress using the vstack function
+
+```python
+word_array = np.array([]).reshape(0, maxlength)
+    for message in messages:
+        word_count = np.zeros((1, word_num))
+        for word in word_list:
+            if word  == "yes":
+                word_count[0, word_dictionary[word]] += 1
+        word_array = np.vstack([word_array, word_count])
+    return word_array
+```
+
+## Saving a numpy matrix in a text file
+
+```python
+np.savetxt('./output/p06_sample_train_matrix', train_matrix[:100,:])
+```

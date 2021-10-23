@@ -2,7 +2,7 @@
 layout: page
 title: Exceptions and File Handling
 permalink: /Exceptions+File_Handlers/
-nav_order: 6
+nav_order: 7
 ---
 
 <details open markdown="block">

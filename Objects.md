@@ -2,7 +2,7 @@
 layout: page
 title: Objects
 permalink: /Objects/
-nav_order: 5
+nav_order: 6
 ---
 
 <details open markdown="block">

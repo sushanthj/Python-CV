@@ -2,7 +2,7 @@
 layout: page
 title: CV Edge Detection and Filters
 permalink: /CV Concepts/
-nav_order: 9
+nav_order: 11
 ---
 
 <details open markdown="block">

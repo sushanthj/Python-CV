@@ -2,7 +2,7 @@
 layout: page
 title: Functions and Modules
 permalink: /Power of Introspection/
-nav_order: 4
+nav_order: 5
 ---
 
 <details open markdown="block">
