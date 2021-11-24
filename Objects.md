@@ -18,7 +18,7 @@ nav_order: 6
 
 import module only pulls the module as an object and like any other object, it has only attributes
 
-```
+```python
 >>> import types
 >>> types.FunctionType
 <type 'function'>
