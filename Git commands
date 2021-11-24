@@ -17,4 +17,6 @@ git push ts_origin_github
 the two remotes we have on current machine are:
 origin and ts_origin_github
 
+To make local branch master track a different remote branch (branch in your cloud github repo) do:
+git branch --set-upstream-to=origin/master
 
