@@ -58,6 +58,18 @@ img[:,:,2] = 0
 
 ## Extracting Region of Interest (ROI)
 
+The axes of an image by default is saved as:
+
+```python
+h,w,d = img.shape()
+```
+
+In the above height, width, and depth: 
+- depth is saved as it normally would be
+- height is defined as top of image is zero and bottom of image is max height /
+(opposite of the normal y-axis)
+- width is defined normally, from left to right like 'x-axis'
+
 ```python
 ball = img[280:340, 330:390]
 img[273:333, 100:160] = ball
@@ -134,6 +146,30 @@ for i in range(4):
 plt.show()
 ```
 ______________________________________________________________________________________________
+
+## Creating custom window sizes and putting text on images
+
+The below code will also take user input and executes custom commands like an if-else statement
+
+```python
+h1, w1, d1 = img.shape
+        
+        cv2.putText(img, img_orig_path, (20,20) , font, fontScale, fontColor, lineType) 
+        img = cv2.rectangle(img, (x1,y1), (x2,y2),(36,255,120), 3)
+        cv2.namedWindow("display_image",cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("display_image",1000,1000)
+        cv2.imshow("display_image", img)
+        k1 = cv2.waitKey(0) & 0xFF
+        if k1 == ord('q'):
+            cv2.destroyAllWindows() 
+            print("> User exit request")
+            break
+        elif k1 == ord('p'):
+            print('okay')
+        else:    
+            pass
+```
+
 
 ## Bitwise operations
 
