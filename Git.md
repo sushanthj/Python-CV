@@ -75,3 +75,5 @@ So do the following
 ## Points to Note
 
 - If you checkout a file 'git checkout blade.py' it resets the file to whatever is the latest from that branch in upstream
+
+- If you want to physically add or change remotes go to the respective folder and do 'nano .git/config'
