@@ -77,3 +77,10 @@ So do the following
 - If you checkout a file 'git checkout blade.py' it resets the file to whatever is the latest from that branch in upstream
 
 - If you want to physically add or change remotes go to the respective folder and do 'nano .git/config'
+
+- the correct syntax for the merge command is: \
+'git merge ts_origin/master' \
+What this does is that if the current branch is origin/develop it will merge the files of \
+current branch i.e origin/develop with ts_origin/master
+
+- Note that even if ts_origin/master is in ts_github account and origin/master is in sushanthj github account, it will still merge as long as remotes exist for both these accounts. If remotes don't exist, you can always add as shown up above 
