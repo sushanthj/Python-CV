@@ -215,6 +215,18 @@ cv.destroyAllWindows()
 The output will be as follows:
 ![](/images/opencv1.png)
 
+## Masking an Image
+
+- Firstly the mask has to be same size as image
+- Secondly, the mask needs a white region where we'll be performing our bitwise ops
+
+```python
+# zero mask unwanted regions in the image
+mask = np.zeros([1200,1328], dtype="uint8")
+mask = cv2.rectangle(mask,(130,300),(1200,1020),(255,255,255),-1)
+depth_img = cv2.bitwise_and(depth_img, depth_img, mask=mask)
+```
+
 ## Resizing an Image
 
 ```python
