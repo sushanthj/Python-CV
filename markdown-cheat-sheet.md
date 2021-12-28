@@ -103,4 +103,6 @@ term
 ### Go to next line
 
 This will split the sentence \
-the sentence into two lines
+into two lines
+
+In the above format, ensure there is no whitespace between the backslash and the next word (in this case 'into')

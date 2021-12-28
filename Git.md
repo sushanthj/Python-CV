@@ -27,8 +27,8 @@ In the above link, follow the procedures, but instead of using username and pass
 
 ## Process for adding to a github page
 
-git add .
-git commit -m "made new code"
+git add . \
+git commit -m "made new code" \
 git push or git push origin develop (if you cloned from develop branch)
 
 ## If you want to track a different branch
