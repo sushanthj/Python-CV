@@ -84,3 +84,17 @@ What this does is that if the current branch is origin/develop it will merge the
 current branch i.e origin/develop with ts_origin/master
 
 - Note that even if ts_origin/master is in ts_github account and origin/master is in sushanthj github account, it will still merge as long as remotes exist for both these accounts. If remotes don't exist, you can always add as shown up above 
+
+### Concepts for working with two repos or two repos on two different github accounts:
+
+Basically locally you will have 'master' branch if you do 'git branch' \
+This master can track two upstream branches using two different remotes \
+One remote is added automatically when you clone the repo \
+The next remote will have to be added manually to your other git account or other repo
+
+Then to push the same commit to both branches first do 'git push' \
+and see which repo it pushes to (say it pushes to origin/master \
+Then do 'git push --set-upstream ts_origin/develop' to push to your second repo \
+However, do note that your local branch always tracks to the latest branch you pushed to \
+i.e if you do a git pull, it will pull from the latest branch to which you pushed \
+in this case it will pull from ts_origin/develop
