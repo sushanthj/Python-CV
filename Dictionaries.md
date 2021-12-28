@@ -41,4 +41,23 @@ index = 0
             del word_dict[word_key]
     return word_dict
 ```
+# Ordered Dictionaries
 
+In case we want a dictionary to also follow structure like a list, we use these dictionaries
+
+However, these dictionaries take up more space than normal dicts due to their doubly-linked lists backend. The process to create such a dict is shown below:
+
+```python
+from collections import OrderedDict
+
+self.depth_dictionary = OrderedDict()
+
+# access the dictonary like any other dictionary:
+self.depth_dictionary['favourite_cake'] = 'pineapple'
+
+# however, to remove the first item in such a dict, we have simple functions like below:
+if len(self.depth_dictionary) > 10:
+    self.depth_dictionary.popitem(last=False)
+
+# in the above line, if last=True, then it will delete the last item of the dict
+```
