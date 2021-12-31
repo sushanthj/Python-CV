@@ -21,7 +21,7 @@ nav_order: 13
 
 # Understanding the Pool loop for Multi-Processsing
 
-import module only pulls the module as an object and like any other object, it has only attributes
+Example code:
 
 ```python
 from multiprocessing import Pool
@@ -32,7 +32,7 @@ from tqdm import tqdm
 annotations = [{'project_name':'1'}, {'project_name':'2'}]
 
 def print_images_labels(annotation):
-    project_name = annotation[]
+    project_name = annotation[0]
     print(project_name)
 
 #process=10 means we used 10 CPU cores (usually CPU will have 8 cores and 16 threads owing to hyperthreading tech)
