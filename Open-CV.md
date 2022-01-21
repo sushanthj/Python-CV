@@ -21,6 +21,25 @@ nav_order: 12
 
 Many numpy functions will still be used alongside OpenCV as it augments the capabilities of OpenCV
 
+## Note: The axes convention for numpy and opencv are different in some instances
+
+For basic image ops:
+- numpy has [width, height, depth] as the three axes
+- opencv has [height, width, depth] as the three axes
+
+However, for operations such as cv2.rectangle, i.e.
+
+```python
+image = cv2.rectangle(image, start_point, end_point, color, thickness)
+# the start point is (x,y) i.e. same as numpy
+```
+
+But, if we're extracting an ROI (see section below), then we do:
+```ball = img[280:340, 330:390]```
+
+here the 280:340 = height and 330:390 = width
+
+
 # Basic Image Operations
 
 ## Read Image, Overlap Image, Show Image and Create New Image
@@ -347,3 +366,87 @@ img1 = cv.blur(img,(5,5)) #Normal averging filter
 img2 = cv.GaussianBlur(img,(5,5))
 ```
 
+## Perspective Transforms and Homography
+
+In homography we can:
+1. Match the FOV of one camera to another camera (which is slighly offset from the first)
+2. Warp an image to remove distorion effects
+
+We achieve this by first finding a homography matrix. The basic backend is shown below:
+
+![](/images/homography.png)
+
+The basic code to find the homography matrix and to do the actual perspective transform uses three OpenCV functions:
+- ```cv2.findHomography(pts_dst, pts_src)```
+- ```cv2.warpPerspective(im_dst, h, (im_src.shape[1],im_src.shape[0]))```
+- ```transformed_points = cv2.perspectiveTransform(test_points,h)```
+
+In the above options:
+
+h = transformation matrix \
+im_dst = destination image \
+im_src = source image \
+pts_dst = keypoints on the destination image \
+pts_src = keypoints on the source image
+
+**The destination image will be the image which will be transformed to match the source image**
+
+
+```python
+from cgi import test
+import os
+import cv2
+import numpy as np
+from datetime import datetime
+from numpy.lib.npyio import load
+
+def compute_transformation(src_path, dst_path, out_path="/home/sush/TS/misc/test_scripts/"):
+    # Read source image.
+    im_src = cv2.imread(src_path)
+    # Four corners of the book in source image
+    # pts_idx = [1,2,3,4,5,6,13,7,8,9,10,11,12]
+    pts_src = np.array([[24,240],[120,223],[252,224],[413,221],[315,332],[367,413],[438,467],[440,410],[365,474],[36,429],[36,499],[27,381]])
+
+    # Read destination image.
+    im_dst = cv2.imread(dst_path)
+    # Four corners of the book in destination image.
+    pts_dst = np.array([[5,129],[115,107],[261,110],[436,106],[327,285],[382,418],[465,516],[465,418],[382,515],[19,438],[12,551],[10,352]])
+
+    # Calculate Homography
+    h, status = cv2.findHomography(pts_dst, pts_src)
+    #h, status = cv2.getPerspectiveTransform(pts_dst, pts_src)
+
+    test_points = np.array([[328,218],[423,333]])
+    test_points = np.float32(test_points).reshape(-1,1,2)
+
+    # Warp destination image to source image based on homography
+    im_out = cv2.warpPerspective(im_dst, h, (im_src.shape[1],im_src.shape[0]))
+    transformed_points = cv2.perspectiveTransform(test_points,h)
+    print("transfored points are \n",transformed_points)
+
+    # Display images
+    cv2.imshow("Source Image", im_src)
+    cv2.imshow("Destination Image", im_dst)
+    cv2.imshow("Warped Source Image", im_out)
+
+
+    #cv2.imwrite(out_path + "warped_img_{}_pts.png".format(pts_src.shape[0]), im_out)
+    np.savetxt(out_path + "trans_matrix_{}_pts.txt".format(pts_src.shape[0]),h, fmt='%s')
+    print("h : ", h)
+
+    cv2.waitKey(0)
+
+
+if __name__ == '__main__' :
+
+    dst_path = "/home/sush/TS/depth_testing/validation/camtop_raw/0.png"
+    src_path = "/home/sush/TS/depth_testing/validation/depth_raw/0.png"
+    compute_transformation(src_path,dst_path)
+```
+
+### Points to Note on perspective transform opencv functions:
+1. cv2.warpPerspective is used to transform the whole image and takes ~50ms on a Xavier NX (as of 2022). Therefore it must be used sparingly to prevent the pipeline from slowing down and the ros_node from publishing at the low frequency
+
+2. cv2.perspectiveTransform works only on points in the image (image vectors), and is therefore much faster
+
+*if the requirement is to map object detection boxes in one image onto another, then simply take the box corners and use perspectiveTransform to save computation time*
