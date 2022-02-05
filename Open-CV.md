@@ -450,3 +450,122 @@ if __name__ == '__main__' :
 2. cv2.perspectiveTransform works only on points in the image (image vectors), and is therefore much faster
 
 *if the requirement is to map object detection boxes in one image onto another, then simply take the box corners and use perspectiveTransform to save computation time*
+
+
+# Buiding and Using opencv with CUDA
+
+## The process for building opencv with CUDA
+
+```
+To build opencv from source do the following:
+________________________________________________________
+Install Dependencies
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install build-essential cmake unzip pkg-config
+sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install libv4l-dev libxvidcore-dev libx264-dev
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libblas-dev liblapack-dev gfortran
+sudo apt-get install python3-dev
+_______________________________________________________________________________________________________________________________
+
+Pull the repos of Opencv and Opencv_contrib
+ cd ~
+ wget -O opencv-4.5.1.zip https://github.com/opencv/opencv/archive/4.5.1.zip
+ unzip -q opencv-4.5.1.zip
+ mv opencv-4.5.1 opencv
+ rm -f opencv-4.5.1.zip
+
+ wget -O opencv_contrib-4.5.1.zip https://github.com/opencv/opencv_contrib/archive/4.5.1.zip
+ unzip -q opencv_contrib-4.5.1.zip
+ mv opencv_contrib-4.5.1 opencv_contrib
+ rm -f opencv_contrib-4.5.1.zip
+_______________________________________________________________________________________________________________________________
+
+If you want to work within a venv, create one and do a pip3 install numpy and pip install numpy
+Else, just do the same in global
+_______________________________________________________________________________________________________________________________
+
+Go into the folder
+
+ cd ~/opencv
+ mkdir build
+ cd build
+ 
+Then, run the below cmake command with all arguments (directly copy paste from here)
+
+cmake \
+      -D CMAKE_BUILD_TYPE=RELEASE \
+      -D CMAKE_INSTALL_PREFIX=/usr/local \
+      -D INSTALL_PYTHON_EXAMPLES=OFF \
+      -D INSTALL_C_EXAMPLES=OFF \
+      -D OPENCV_ENABLE_NONFREE=ON \
+      -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+      -D BUILD_EXAMPLES=ON \
+      -D WITH_CUDA=ON \
+      -D WITH_CUDNN=ON \
+      -D OPENCV_DNN_CUDA=ON \
+      -D WITH_CUBLAS=ON \
+      -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.2 \
+      -D WITH_OPENGL=ON \
+      -D INSTALL_C_EXAMPLES=OFF \
+      ..
+______________________________________________________________________________________________________________________________
+
+Follow this up with:
+
+ make
+ sudo make install
+ sudo ldconfig
+ 
+Now we need to link this new opencv to python:
+
+sudo /bin/bash -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf'
+________________________________________________________________________________________________________________________________
+
+References:
+https://gist.github.com/raulqf/f42c718a658cddc16f9df07ecc627be7
+https://learnopencv.com/opencv-dnn-with-gpu-support/
+https://docs.opencv.org/4.x/d6/d15/tutorial_building_tegra_cuda.html
+
+Use the below link to understand how we can use cuda for generic opencv functions
+https://medium.com/dropout-analytics/opencv-cuda-for-videos-f3dcf346e398
+```
+
+## Example of cv2.cuda
+
+```python
+start = time.time()
+# create an instance of the GpuMat object
+gpu_frame = cv2.cuda_GpuMat()
+# upload the image to the GPU via the api
+gpu_frame.upload(image_raw)
+h, w, c = image_raw.shape
+# notice how we are adding just cuda to make it work on GPU
+image = cv2.cuda.cvtColor(gpu_frame, cv2.COLOR_BGR2RGB)
+# Calculate width and height and paddings
+r_w = INPUT_W / w
+r_h = INPUT_H / h
+if r_h > r_w:
+    tw = INPUT_W
+    th = int(r_w * h)
+    tx1 = tx2 = 0
+    ty1 = int((INPUT_H - th) / 2)
+    ty2 = INPUT_H - th - ty1
+else:
+    tw = int(r_h * w)
+    th = INPUT_H
+    tx1 = int((INPUT_W - tw) / 2)
+    tx2 = INPUT_W - tw - tx1
+    ty1 = ty2 = 0
+# Resize the image with long side while maintaining ratio
+image = cv2.cuda.resize(image, (tw,th))
+# Pad the short side with (128,128,128)
+image = image.download()
+image = cv2.copyMakeBorder(
+    image, ty1, ty2, tx1, tx2, cv2.BORDER_CONSTANT, (128, 128, 128)
+)
+```
