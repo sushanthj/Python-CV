@@ -1,4 +1,181 @@
-<!DOCTYPE html><html lang="en-US"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"><link rel="stylesheet" href="/assets/css/just-the-docs-default.css"> <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script> <script type="text/javascript" src="/assets/js/just-the-docs.js"></script><meta name="viewport" content="width=device-width, initial-scale=1"><title>Exceptions and File Handling | Python Notes</title><meta name="generator" content="Jekyll v4.2.0" /><meta property="og:title" content="Exceptions and File Handling" /><meta property="og:locale" content="en_US" /><meta name="description" content="Python Notes" /><meta property="og:description" content="Python Notes" /><link rel="canonical" href="/Exceptions+File_Handlers/" /><meta property="og:url" content="/Exceptions+File_Handlers/" /><meta property="og:site_name" content="Python Notes" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Exceptions and File Handling" /> <script type="application/ld+json"> {"@type":"WebPage","url":"/Exceptions+File_Handlers/","headline":"Exceptions and File Handling","description":"Python Notes","@context":"https://schema.org"}</script><body> <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"> <symbol id="svg-link" viewBox="0 0 24 24"><title>Link</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path> </svg> </symbol> <symbol id="svg-search" viewBox="0 0 24 24"><title>Search</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"> <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </symbol> <symbol id="svg-menu" viewBox="0 0 24 24"><title>Menu</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line> </svg> </symbol> <symbol id="svg-arrow-right" viewBox="0 0 24 24"><title>Expand</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline> </svg> </symbol> <symbol id="svg-doc" viewBox="0 0 24 24"><title>Document</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline> </svg> </symbol> </svg><div class="side-bar"><div class="site-header"> <a href="/" class="site-title lh-tight"> Python Notes </a> <a href="#" id="menu-button" class="site-button"> <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg> </a></div><nav role="navigation" aria-label="Main" id="site-nav" class="site-nav"><ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a><li class="nav-list-item"><a href="/Objects/" class="nav-list-link">Objects</a><li class="nav-list-item active"><a href="/Exceptions+File_Handlers/" class="nav-list-link active">Exceptions and File Handling</a><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a><li class="nav-list-item"><a href="/git_concepts" class="nav-list-link">Git Concepts</a></ul></nav><footer class="site-footer"> This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.</footer></div><div class="main" id="top"><div id="main-header" class="main-header"><div class="search"><div class="search-input-wrap"> <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off"> <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label></div><div id="search-results" class="search-results"></div></div><nav aria-label="Auxiliary" class="aux-nav"><ul class="aux-nav-list"><li class="aux-nav-list-item"> <a href="//github.com/sushanthj" class="site-button" > Sushanth's GitHub </a></ul></nav></div><div id="main-content-wrap" class="main-content-wrap"><div id="main-content" class="main-content" role="main"> <details open=""> <summary class="text-delta"> Table of contents </summary><ol id="markdown-toc"><li><a href="#intro" id="markdown-toc-intro">Intro</a><li><a href="#the-else-part-of-try-and-except" id="markdown-toc-the-else-part-of-try-and-except">The ‘else’ part of try and except:</a><li><a href="#working-with-files" id="markdown-toc-working-with-files">Working with Files</a><ol><li><a href="#opening-files" id="markdown-toc-opening-files">Opening Files</a><li><a href="#built-in-file-methods" id="markdown-toc-built-in-file-methods">Built-in File Methods</a><ol><li><a href="#the-sys-module" id="markdown-toc-the-sys-module">The sys Module</a><li><a href="#the-ospath-module" id="markdown-toc-the-ospath-module">The os.path module</a></ol></ol></ol></details><h1 id="intro"> <a href="#intro" class="anchor-heading" aria-labelledby="intro"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Intro</h1><ul><li>Accessing a non−existent dictionary key will raise a KeyError exception.<li>Searching a list for a non−existent value will raise a ValueError exception.<li>Calling a non−existent method will raise an AttributeError exception.<li>Referencing a non−existent variable will raise a NameError exception.<li>Mixing datatypes without coercion will raise a TypeError exception.</ul><h1 id="the-else-part-of-try-and-except"> <a href="#the-else-part-of-try-and-except" class="anchor-heading" aria-labelledby="the-else-part-of-try-and-except"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The ‘else’ part of try and except:</h1><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="/assets/css/just-the-docs-default.css">
+
+  
+
+  
+    <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script>
+  
+  <script type="text/javascript" src="/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Exceptions and File Handling | Python Notes</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Exceptions and File Handling" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Python Notes" />
+<meta property="og:description" content="Python Notes" />
+<link rel="canonical" href="/Exceptions+File_Handlers/" />
+<meta property="og:url" content="/Exceptions+File_Handlers/" />
+<meta property="og:site_name" content="Python Notes" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Exceptions and File Handling" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"/Exceptions+File_Handlers/","headline":"Exceptions and File Handling","description":"Python Notes","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="svg-link" viewBox="0 0 24 24">
+      <title>Link</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      </svg>
+    </symbol>
+    <symbol id="svg-search" viewBox="0 0 24 24">
+      <title>Search</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-menu" viewBox="0 0 24 24">
+      <title>Menu</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+        <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+      <title>Expand</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </symbol>
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+      <title>Document</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+      </svg>
+    </symbol>
+  </svg>
+
+  <div class="side-bar">
+    <div class="site-header">
+      <a href="/" class="site-title lh-tight">
+  Python Notes
+
+</a>
+      <a href="#" id="menu-button" class="site-button">
+        <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg>
+      </a>
+    </div>
+    <nav role="navigation" aria-label="Main" id="site-nav" class="site-nav">
+      
+        <ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a></li><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a></li><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a></li><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a></li><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a></li><li class="nav-list-item"><a href="/Objects/" class="nav-list-link">Objects</a></li><li class="nav-list-item active"><a href="/Exceptions+File_Handlers/" class="nav-list-link active">Exceptions and File Handling</a></li><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a></li><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a></li><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a></li><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a></li><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a></li><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a></li><li class="nav-list-item"><a href="/git_concepts" class="nav-list-link">Git Concepts</a></li></ul>
+
+      
+    </nav>
+    <footer class="site-footer">
+      This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    </footer>
+  </div>
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+      
+        <div class="search">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off">
+            <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+          </div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      
+      
+      
+        <nav aria-label="Auxiliary" class="aux-nav">
+          <ul class="aux-nav-list">
+            
+              <li class="aux-nav-list-item">
+                <a href="//github.com/sushanthj" class="site-button"
+                  
+                >
+                  Sushanth's GitHub
+                </a>
+              </li>
+            
+          </ul>
+        </nav>
+      
+    </div>
+    <div id="main-content-wrap" class="main-content-wrap">
+      
+        
+      
+      <div id="main-content" class="main-content" role="main">
+        
+          <details open="">
+  <summary class="text-delta">
+    Table of contents
+  </summary>
+<ol id="markdown-toc">
+  <li><a href="#intro" id="markdown-toc-intro">Intro</a></li>
+  <li><a href="#the-else-part-of-try-and-except" id="markdown-toc-the-else-part-of-try-and-except">The ‘else’ part of try and except:</a></li>
+  <li><a href="#working-with-files" id="markdown-toc-working-with-files">Working with Files</a>    <ol>
+      <li><a href="#opening-files" id="markdown-toc-opening-files">Opening Files</a></li>
+      <li><a href="#built-in-file-methods" id="markdown-toc-built-in-file-methods">Built-in File Methods</a>        <ol>
+          <li><a href="#the-sys-module" id="markdown-toc-the-sys-module">The sys Module</a></li>
+          <li><a href="#the-ospath-module" id="markdown-toc-the-ospath-module">The os.path module</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+</details>
+      <h1 id="intro">
+        
+        
+          <a href="#intro" class="anchor-heading" aria-labelledby="intro"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Intro
+        
+        
+      </h1>
+    
+
+<ul>
+  <li>Accessing a non−existent dictionary key will raise a KeyError exception.</li>
+  <li>Searching a list for a non−existent value will raise a ValueError exception.</li>
+  <li>Calling a non−existent method will raise an AttributeError exception.</li>
+  <li>Referencing a non−existent variable will raise a NameError exception.</li>
+  <li>Mixing datatypes without coercion will raise a TypeError exception.</li>
+</ul>
+      <h1 id="the-else-part-of-try-and-except">
+        
+        
+          <a href="#the-else-part-of-try-and-except" class="anchor-heading" aria-labelledby="the-else-part-of-try-and-except"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The ‘else’ part of try and except:
+        
+        
+      </h1>
+    
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
   <span class="kn">from</span> <span class="nn">EasyDialogs</span> <span class="kn">import</span> <span class="n">AskPassword</span>
 <span class="k">except</span> <span class="nb">ImportError</span><span class="p">:</span>
   <span class="n">getpass</span> <span class="o">=</span> <span class="n">default_getpass</span>
@@ -6,17 +183,74 @@
   <span class="n">getpass</span> <span class="o">=</span> <span class="n">AskPassword</span>
 <span class="k">finally</span><span class="p">:</span>
   <span class="k">pass</span>
-</code></pre></div></div><p>A try…except block can have an else clause, like an if statement. If no exception is raised during the try block, the else clause is executed afterwards. <b>finally</b> runs no matter what.</p><p>In this case, that means that the from EasyDialogs import AskPassword import worked, so you should bind getpass to the AskPassword function.</p><h1 id="working-with-files"> <a href="#working-with-files" class="anchor-heading" aria-labelledby="working-with-files"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Working with Files</h1><h2 id="opening-files"> <a href="#opening-files" class="anchor-heading" aria-labelledby="opening-files"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Opening Files</h2><p>When we use the <strong>open</strong> bulit-in function to open a file, it creates a file object (like instantiating a file, but we don’t get class instance, we just get a file) and we can open a file in different modes as well:</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="nb">open</span><span class="p">.</span><span class="n">__doc__</span>  <span class="c1">#displays all possible modes
+</code></pre></div></div>
+
+<p>A try…except block can have an else clause, like an if statement. If no exception is raised during the try block, the else clause is executed afterwards. <b>finally</b> runs no matter what.</p>
+
+<p>In this case, that means that the from EasyDialogs import AskPassword import worked, so you should bind getpass to the AskPassword function.</p>
+      <h1 id="working-with-files">
+        
+        
+          <a href="#working-with-files" class="anchor-heading" aria-labelledby="working-with-files"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Working with Files
+        
+        
+      </h1>
+    
+      <h2 id="opening-files">
+        
+        
+          <a href="#opening-files" class="anchor-heading" aria-labelledby="opening-files"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Opening Files
+        
+        
+      </h2>
+    
+
+<p>When we use the <strong>open</strong> bulit-in function to open a file, it creates a file object (like instantiating a file, but we don’t get class instance, we just get a file) and we can open a file in different modes as well:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="nb">open</span><span class="p">.</span><span class="n">__doc__</span>  <span class="c1">#displays all possible modes
 </span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"/music/_singles/kairo.mp3"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="o">&lt;</span><span class="nb">open</span> <span class="nb">file</span> <span class="s">'/music/_singles/kairo.mp3'</span><span class="p">,</span> <span class="n">mode</span> <span class="s">'rb'</span> <span class="n">at</span> <span class="mf">010E3988</span><span class="o">&gt;</span>
-</code></pre></div></div><h2 id="built-in-file-methods"> <a href="#built-in-file-methods" class="anchor-heading" aria-labelledby="built-in-file-methods"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Built-in File Methods</h2><p>f.tell() = outputs current position of pointer in file <br /> f.seek( #bytes to consider, start from start/current/end pos) = moves pointer according 2 arguments provided <br /> f.read(128) = reads 128 bytes from file and returns data as a string <br /> f.close = closes a file <br /> f.closed = returns boolean depending upon whether file open or not <br /></p><p>f.write(‘some string’) = adds the string to the file wherever the current pointer is</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">logfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.log'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span>
+</code></pre></div></div>
+      <h2 id="built-in-file-methods">
+        
+        
+          <a href="#built-in-file-methods" class="anchor-heading" aria-labelledby="built-in-file-methods"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Built-in File Methods
+        
+        
+      </h2>
+    
+
+<p>f.tell() = outputs current position of pointer in file <br />
+f.seek( #bytes to consider, start from start/current/end pos) = moves pointer according 2 arguments provided <br />
+f.read(128) = reads 128 bytes from file and returns data as a string <br />
+f.close = closes a file <br />
+f.closed = returns boolean depending upon whether file open or not <br /></p>
+
+<p>f.write(‘some string’) = adds the string to the file wherever the current pointer is</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">logfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.log'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">logfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">'test succeeded'</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">logfile</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="nb">file</span><span class="p">(</span><span class="s">'test.log'</span><span class="p">).</span><span class="n">read</span><span class="p">()</span>
 <span class="n">test</span> <span class="n">succeeded</span>
-</code></pre></div></div><p><i> Note. <b>file</b> is a synonym for <b>open</b>. This one−liner opens the file, reads its contents, and prints them.</i></p><h3 id="the-sys-module"> <a href="#the-sys-module" class="anchor-heading" aria-labelledby="the-sys-module"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The sys Module</h3><p>sys.modules is a dictionary containing all python modules which were imported since you started the IDE.<br /> As we know, each dictionary is a key value pair.<br /> So in this case, <strong>key = module name, value = module object</strong></p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+</code></pre></div></div>
+<p><i> Note. <b>file</b> is a synonym for <b>open</b>. This one−liner opens the file, reads its contents, and prints them.</i></p>
+      <h3 id="the-sys-module">
+        
+        
+          <a href="#the-sys-module" class="anchor-heading" aria-labelledby="the-sys-module"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The sys Module
+        
+        
+      </h3>
+    
+
+<p>sys.modules is a dictionary containing all python modules which were imported since you started the IDE.<br />
+As we know, each dictionary is a key value pair.<br />
+So in this case, <strong>key = module name, value = module object</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="n">win32api</span>
 <span class="n">os</span><span class="p">.</span><span class="n">path</span>
@@ -30,13 +264,31 @@
 <span class="n">site</span>
 <span class="n">signal</span>
 <span class="n">UserDict</span>
-</code></pre></div></div><p>Passing a module name as an argument to the sys.modules will give its location:</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fileinfo</span> <span class="kn">import</span> <span class="n">MP3FileInfo</span>
+</code></pre></div></div>
+
+<p>Passing a module name as an argument to the sys.modules will give its location:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">fileinfo</span> <span class="kn">import</span> <span class="n">MP3FileInfo</span>
 <span class="n">MP3FileInfo</span><span class="p">.</span><span class="n">__module__</span>
 <span class="o">&gt;&gt;&gt;</span><span class="s">'fileinfo'</span>
 
 <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">MP3FileInfo</span><span class="p">.</span><span class="n">__module__</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;&lt;</span><span class="n">module</span> <span class="s">'fileinfo'</span> <span class="k">from</span> <span class="s">'fileinfo.pyc'</span><span class="o">&gt;</span>
-</code></pre></div></div><h3 id="the-ospath-module"> <a href="#the-ospath-module" class="anchor-heading" aria-labelledby="the-ospath-module"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The os.path module</h3><p>Suppose we have a specific module to concatenate two strings, or we have a separate module to split a string. This module can be OS specific, and therefore we may not know the <strong>exact name of the module</strong><br /></p><p>In situations like this, we can make use of the os.path :</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></pre></div></div>
+      <h3 id="the-ospath-module">
+        
+        
+          <a href="#the-ospath-module" class="anchor-heading" aria-labelledby="the-ospath-module"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> The os.path module
+        
+        
+      </h3>
+    
+
+<p>Suppose we have a specific module to concatenate two strings, or we have a separate module to split a string. This module can be OS specific, and therefore we may not know the <strong>exact name of the module</strong><br /></p>
+
+<p>In situations like this, we can make use of the os.path :</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
 <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">"c:</span><span class="se">\\</span><span class="s">music</span><span class="se">\\</span><span class="s">ap</span><span class="se">\\</span><span class="s">"</span><span class="p">,</span> <span class="s">"mahadeva.mp3"</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span><span class="s">'c:</span><span class="se">\\</span><span class="s">music</span><span class="se">\\</span><span class="s">ap</span><span class="se">\\</span><span class="s">mahadeva.mp3'</span>
 
@@ -48,9 +300,49 @@
 <span class="o">&gt;&gt;&gt;</span><span class="p">[</span><span class="s">'a_time_long_forgotten_con.mp3'</span><span class="p">,</span> <span class="s">'hellraiser.mp3'</span><span class="p">,</span>
 <span class="s">'kairo.mp3'</span><span class="p">,</span> <span class="s">'long_way_home1.mp3'</span><span class="p">,</span> <span class="s">'sidewinder.mp3'</span><span class="p">,</span>
 <span class="s">'spinning.mp3'</span><span class="p">]</span>
-</code></pre></div></div><p>The os.listdir takes the path of a directory and just lists out the contents</p><p>Similarly there exists os.path.isfile(pathname), which outputs 1 if it is a file, or 0 if not.</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The os.listdir takes the path of a directory and just lists out the contents</p>
+
+<p>Similarly there exists os.path.isfile(pathname), which outputs 1 if it is a file, or 0 if not.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">f</span><span class="p">))]</span>
 
 <span class="p">[</span><span class="s">'cygwin'</span><span class="p">,</span> <span class="s">'docbook'</span><span class="p">,</span> <span class="s">'Documents and Settings'</span><span class="p">]</span>
 
-</code></pre></div></div><hr><footer><p class="text-small text-grey-dk-100 mb-0"></p><div class="d-flex mt-2"></div></footer></div></div><div class="search-overlay"></div></div>
+</code></pre></div></div>
+
+        
+
+        
+
+        
+        
+          <hr>
+          <footer>
+            
+
+            <p class="text-small text-grey-dk-100 mb-0"></p>
+
+            
+              <div class="d-flex mt-2">
+                
+                
+              </div>
+            
+          </footer>
+        
+
+      </div>
+    </div>
+
+    
+      
+
+      <div class="search-overlay"></div>
+    
+  </div>
+</body>
+</html>
+

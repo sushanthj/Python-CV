@@ -1,14 +1,213 @@
-<!DOCTYPE html><html lang="en-US"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"><link rel="stylesheet" href="/assets/css/just-the-docs-default.css"> <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script> <script type="text/javascript" src="/assets/js/just-the-docs.js"></script><meta name="viewport" content="width=device-width, initial-scale=1"><title>Objects | Python Notes</title><meta name="generator" content="Jekyll v4.2.0" /><meta property="og:title" content="Objects" /><meta property="og:locale" content="en_US" /><meta name="description" content="Python Notes" /><meta property="og:description" content="Python Notes" /><link rel="canonical" href="/Objects/" /><meta property="og:url" content="/Objects/" /><meta property="og:site_name" content="Python Notes" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Objects" /> <script type="application/ld+json"> {"@type":"WebPage","url":"/Objects/","headline":"Objects","description":"Python Notes","@context":"https://schema.org"}</script><body> <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"> <symbol id="svg-link" viewBox="0 0 24 24"><title>Link</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path> </svg> </symbol> <symbol id="svg-search" viewBox="0 0 24 24"><title>Search</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"> <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </symbol> <symbol id="svg-menu" viewBox="0 0 24 24"><title>Menu</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line> </svg> </symbol> <symbol id="svg-arrow-right" viewBox="0 0 24 24"><title>Expand</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline> </svg> </symbol> <symbol id="svg-doc" viewBox="0 0 24 24"><title>Document</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline> </svg> </symbol> </svg><div class="side-bar"><div class="site-header"> <a href="/" class="site-title lh-tight"> Python Notes </a> <a href="#" id="menu-button" class="site-button"> <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg> </a></div><nav role="navigation" aria-label="Main" id="site-nav" class="site-nav"><ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a><li class="nav-list-item active"><a href="/Objects/" class="nav-list-link active">Objects</a><li class="nav-list-item"><a href="/Exceptions+File_Handlers/" class="nav-list-link">Exceptions and File Handling</a><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a><li class="nav-list-item"><a href="/git_concepts" class="nav-list-link">Git Concepts</a></ul></nav><footer class="site-footer"> This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.</footer></div><div class="main" id="top"><div id="main-header" class="main-header"><div class="search"><div class="search-input-wrap"> <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off"> <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label></div><div id="search-results" class="search-results"></div></div><nav aria-label="Auxiliary" class="aux-nav"><ul class="aux-nav-list"><li class="aux-nav-list-item"> <a href="//github.com/sushanthj" class="site-button" > Sushanth's GitHub </a></ul></nav></div><div id="main-content-wrap" class="main-content-wrap"><div id="main-content" class="main-content" role="main"> <details open=""> <summary class="text-delta"> Table of contents </summary><ol id="markdown-toc"><li><a href="#difference-between--import-module-and-from-module-import" id="markdown-toc-difference-between--import-module-and-from-module-import">Difference between <i> ‘import module’ and ‘from module import’</i></a><li><a href="#classes" id="markdown-toc-classes">Classes</a><ol><li><a href="#note-on-init" id="markdown-toc-note-on-init">Note on <strong>init</strong></a><li><a href="#class-attributes" id="markdown-toc-class-attributes">Class attributes</a><li><a href="#some-terminology" id="markdown-toc-some-terminology">Some terminology</a><ol><li><a href="#side-note-on-object-identity-and-object-equality" id="markdown-toc-side-note-on-object-identity-and-object-equality">Side Note on object identity and object equality</a></ol></ol><li><a href="#examples-on-working-with-classes--built-in-methods" id="markdown-toc-examples-on-working-with-classes--built-in-methods">Examples on working with classes + built-in methods</a></ol></details><h1 id="difference-between--import-module-and-from-module-import"> <a href="#difference-between--import-module-and-from-module-import" class="anchor-heading" aria-labelledby="difference-between--import-module-and-from-module-import"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Difference between <i> ‘import module’ and ‘from module import’</i></h1><p>import module only pulls the module as an object and like any other object, it has only attributes</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">types</span>
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="/assets/css/just-the-docs-default.css">
+
+  
+
+  
+    <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script>
+  
+  <script type="text/javascript" src="/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Objects | Python Notes</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Objects" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Python Notes" />
+<meta property="og:description" content="Python Notes" />
+<link rel="canonical" href="/Objects/" />
+<meta property="og:url" content="/Objects/" />
+<meta property="og:site_name" content="Python Notes" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Objects" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"/Objects/","headline":"Objects","description":"Python Notes","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="svg-link" viewBox="0 0 24 24">
+      <title>Link</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      </svg>
+    </symbol>
+    <symbol id="svg-search" viewBox="0 0 24 24">
+      <title>Search</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-menu" viewBox="0 0 24 24">
+      <title>Menu</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+        <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+      <title>Expand</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </symbol>
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+      <title>Document</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+      </svg>
+    </symbol>
+  </svg>
+
+  <div class="side-bar">
+    <div class="site-header">
+      <a href="/" class="site-title lh-tight">
+  Python Notes
+
+</a>
+      <a href="#" id="menu-button" class="site-button">
+        <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg>
+      </a>
+    </div>
+    <nav role="navigation" aria-label="Main" id="site-nav" class="site-nav">
+      
+        <ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a></li><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a></li><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a></li><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a></li><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a></li><li class="nav-list-item active"><a href="/Objects/" class="nav-list-link active">Objects</a></li><li class="nav-list-item"><a href="/Exceptions+File_Handlers/" class="nav-list-link">Exceptions and File Handling</a></li><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a></li><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a></li><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a></li><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a></li><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a></li><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a></li><li class="nav-list-item"><a href="/git_concepts" class="nav-list-link">Git Concepts</a></li></ul>
+
+      
+    </nav>
+    <footer class="site-footer">
+      This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    </footer>
+  </div>
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+      
+        <div class="search">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off">
+            <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+          </div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      
+      
+      
+        <nav aria-label="Auxiliary" class="aux-nav">
+          <ul class="aux-nav-list">
+            
+              <li class="aux-nav-list-item">
+                <a href="//github.com/sushanthj" class="site-button"
+                  
+                >
+                  Sushanth's GitHub
+                </a>
+              </li>
+            
+          </ul>
+        </nav>
+      
+    </div>
+    <div id="main-content-wrap" class="main-content-wrap">
+      
+        
+      
+      <div id="main-content" class="main-content" role="main">
+        
+          <details open="">
+  <summary class="text-delta">
+    Table of contents
+  </summary>
+<ol id="markdown-toc">
+  <li><a href="#difference-between--import-module-and-from-module-import" id="markdown-toc-difference-between--import-module-and-from-module-import">Difference between <i> ‘import module’ and ‘from module import’</i></a></li>
+  <li><a href="#classes" id="markdown-toc-classes">Classes</a>    <ol>
+      <li><a href="#note-on-init" id="markdown-toc-note-on-init">Note on <strong>init</strong></a></li>
+      <li><a href="#class-attributes" id="markdown-toc-class-attributes">Class attributes</a></li>
+      <li><a href="#some-terminology" id="markdown-toc-some-terminology">Some terminology</a>        <ol>
+          <li><a href="#side-note-on-object-identity-and-object-equality" id="markdown-toc-side-note-on-object-identity-and-object-equality">Side Note on object identity and object equality</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li><a href="#examples-on-working-with-classes--built-in-methods" id="markdown-toc-examples-on-working-with-classes--built-in-methods">Examples on working with classes + built-in methods</a></li>
+</ol>
+
+</details>
+      <h1 id="difference-between--import-module-and-from-module-import">
+        
+        
+          <a href="#difference-between--import-module-and-from-module-import" class="anchor-heading" aria-labelledby="difference-between--import-module-and-from-module-import"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Difference between <i> ‘import module’ and ‘from module import’</i>
+        
+        
+      </h1>
+    
+
+<p>import module only pulls the module as an object and like any other object, it has only attributes</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">types</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">types</span><span class="p">.</span><span class="n">FunctionType</span>
 <span class="o">&lt;</span><span class="nb">type</span> <span class="s">'function'</span><span class="o">&gt;</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">FunctionType</span>
 <span class="nb">NameError</span><span class="p">:</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">variable</span> <span class="n">named</span> <span class="s">'FunctionType'</span>
-</code></pre></div></div><p>However, when we call Functiontype specifically, or if we do ‘from types import *’, the FunctionType gets added into the local namespace. Therefore we can do as below:</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span>
+</code></pre></div></div>
+
+<p>However, when we call Functiontype specifically, or if we do ‘from types import *’, the FunctionType gets added into the local namespace. Therefore we can do as below:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">FunctionType</span>
 <span class="o">&lt;</span><span class="nb">type</span> <span class="s">'function'</span><span class="o">&gt;</span>
 
-</code></pre></div></div><h1 id="classes"> <a href="#classes" class="anchor-heading" aria-labelledby="classes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Classes</h1><h2 id="note-on-init"> <a href="#note-on-init" class="anchor-heading" aria-labelledby="note-on-init"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Note on <strong>init</strong></h2><p><strong>init</strong> methods are optional, but when you define one, you must remember to explicitly call the ancestor’s <strong>init</strong> method (if it defines one).</p><p>This is more generally true: whenever a descendant wants to extend the behavior of the ancestor, the descendant method must explicitly call the ancestor method at the proper time, with the proper arguments.</p><h2 id="class-attributes"> <a href="#class-attributes" class="anchor-heading" aria-labelledby="class-attributes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Class attributes</h2><p>Lets import a module ‘fileinfo’, and then lets create an instace of a class present within the module called ‘FileInfo’</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">fileinfo</span>
+</code></pre></div></div>
+      <h1 id="classes">
+        
+        
+          <a href="#classes" class="anchor-heading" aria-labelledby="classes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Classes
+        
+        
+      </h1>
+    
+      <h2 id="note-on-init">
+        
+        
+          <a href="#note-on-init" class="anchor-heading" aria-labelledby="note-on-init"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Note on <strong>init</strong>
+        
+        
+      </h2>
+    
+
+<p><strong>init</strong> methods are optional, but when you define one, you must remember to explicitly call the ancestor’s <strong>init</strong> method (if it defines one).</p>
+
+<p>This is more generally true: whenever a descendant wants to extend the behavior of the ancestor, the descendant method must explicitly call the ancestor method at the proper time, with the proper arguments.</p>
+      <h2 id="class-attributes">
+        
+        
+          <a href="#class-attributes" class="anchor-heading" aria-labelledby="class-attributes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Class attributes
+        
+        
+      </h2>
+    
+
+<p>Lets import a module ‘fileinfo’, and then lets create an instace of a class present within the module called ‘FileInfo’</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">fileinfo</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">fileinfo</span><span class="p">.</span><span class="n">FileInfo</span><span class="p">(</span><span class="s">"/music/_singles/kairo.mp3"</span><span class="p">)</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">.</span><span class="n">__class__</span>
@@ -16,14 +215,61 @@
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">.</span><span class="n">__doc__</span>
 <span class="s">'store file metadata'</span>
-</code></pre></div></div><p>Every class instance has a built−in attribute, <strong>class</strong>, which is the object’s class.</p><p>Java programmers may be familiar with the Class class, which contains methods like getName and getSuperclass to get metadata information about an object. In Python, this kind of metadata is available directly on the object itself through attributes like <strong>class</strong>, <strong>name</strong>, and <strong>bases</strong>.</p><p><i> if the variable f were to be in a loop, then the moment the loop ends, the instantiation of the class is also destroyed automatically. Therefore, python has a built-in protection against memory leaks</i></p><h2 id="some-terminology"> <a href="#some-terminology" class="anchor-heading" aria-labelledby="some-terminology"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Some terminology</h2><p>Let’s take this base class as reference:</p><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserDict</span><span class="p">:</span>
+</code></pre></div></div>
+<p>Every class instance has a built−in attribute, <strong>class</strong>, which is the object’s class.</p>
+
+<p>Java programmers may be familiar with the Class class, which contains methods like getName
+and getSuperclass to get metadata information about an object. In Python, this kind of metadata is
+available directly on the object itself through attributes like <strong>class</strong>, <strong>name</strong>, and <strong>bases</strong>.</p>
+
+<p><i> if the variable f were to be in a loop, then the moment the loop ends, the instantiation of the class is also destroyed automatically. Therefore, python has a built-in protection against memory leaks</i></p>
+      <h2 id="some-terminology">
+        
+        
+          <a href="#some-terminology" class="anchor-heading" aria-labelledby="some-terminology"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Some terminology
+        
+        
+      </h2>
+    
+
+<p>Let’s take this base class as reference:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UserDict</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="nb">dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
     
     <span class="k">def</span> <span class="nf">somerand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
-</code></pre></div></div><p>We know the role of the self.x variable here. But more formally it’s called a <b> “data attribute” as it is defined within the <strong>init</strong> function of the class itself</b></p><p>However, if we instantiate the class elsewhere and assign it to a variable eg. &lt;i = UserDict()&gt; Then the resulting variable i.somerand() is called a <strong>“class attribute”</strong> and depend on the particular instantiation of the class -&gt; therefore, they aren’t permanent like <strong>data attributes</strong></p><p><i> Also note the above if statement doesn’t have an indented block because only one statement is to be performed after logical evaluation. Therefore, it’s basically just a shortcut representation</i></p><h3 id="side-note-on-object-identity-and-object-equality"> <a href="#side-note-on-object-identity-and-object-equality" class="anchor-heading" aria-labelledby="side-note-on-object-identity-and-object-equality"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Side Note on object identity and object equality</h3><p>In Java, you determine whether two string variables reference the same physical memory location by using str1 == str2. This is called object identity, and it is written in Python as str1 is str2.</p><p>To compare string values in Java, you would use str1.equals(str2); in Python, you would use str1 == str2.</p><h1 id="examples-on-working-with-classes--built-in-methods"> <a href="#examples-on-working-with-classes--built-in-methods" class="anchor-heading" aria-labelledby="examples-on-working-with-classes--built-in-methods"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Examples on working with classes + built-in methods</h1><div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">math</span>
+</code></pre></div></div>
+
+<p>We know the role of the self.x variable here. But more formally it’s called a <b> “data attribute” as it is defined within the <strong>init</strong> function of the class itself</b></p>
+
+<p>However, if we instantiate the class elsewhere and assign it to a variable eg. &lt;i = UserDict()&gt;
+Then the resulting variable i.somerand() is called a <strong>“class attribute”</strong> and depend on the particular instantiation of the class -&gt; therefore, they aren’t permanent like <strong>data attributes</strong></p>
+
+<p><i> Also note the above if statement doesn’t have an indented block because only one statement is to be performed after logical evaluation. Therefore, it’s basically just a shortcut representation</i></p>
+      <h3 id="side-note-on-object-identity-and-object-equality">
+        
+        
+          <a href="#side-note-on-object-identity-and-object-equality" class="anchor-heading" aria-labelledby="side-note-on-object-identity-and-object-equality"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Side Note on object identity and object equality
+        
+        
+      </h3>
+    
+
+<p>In Java, you determine whether two string variables reference the same physical memory location by using str1 == str2. This is called object identity, and it is written in Python as str1 is str2.</p>
+
+<p>To compare string values in Java, you would use str1.equals(str2); in Python, you would use str1 == str2.</p>
+      <h1 id="examples-on-working-with-classes--built-in-methods">
+        
+        
+          <a href="#examples-on-working-with-classes--built-in-methods" class="anchor-heading" aria-labelledby="examples-on-working-with-classes--built-in-methods"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Examples on working with classes + built-in methods
+        
+        
+      </h1>
+    
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">math</span>
 
 <span class="k">class</span> <span class="nc">Complex</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="c1"># Classes Dealing with Complex Numbers in python - Hacker Rank Solution START
@@ -78,4 +324,51 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">)</span>
     <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">/</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">mod</span><span class="p">(),</span> <span class="n">y</span><span class="p">.</span><span class="n">mod</span><span class="p">()]),</span> <span class="n">sep</span><span class="o">=</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
-</code></pre></div></div><p>In the above code notice clearly how:</p><ul><li><p>Built in functions are used and called (these functions don’t have to be called outright, the <code class="language-plaintext highlighter-rouge">&lt;+&gt;</code> operator or <code class="language-plaintext highlighter-rouge">&lt;*&gt;</code> operator is called according to the built-in function)</p><li><p>The return from each function is saved in each individual class instance itself</p><li><p>We can call new class instances from within a class method itself (see the truediv function closely)</p></ul><hr><footer><p class="text-small text-grey-dk-100 mb-0"></p><div class="d-flex mt-2"></div></footer></div></div><div class="search-overlay"></div></div>
+</code></pre></div></div>
+
+<p>In the above code notice clearly how:</p>
+<ul>
+  <li>
+    <p>Built in functions are used and called (these functions don’t have to be called outright, the <code class="language-plaintext highlighter-rouge">&lt;+&gt;</code> operator or <code class="language-plaintext highlighter-rouge">&lt;*&gt;</code> operator is called according to the built-in function)</p>
+  </li>
+  <li>
+    <p>The return from each function is saved in each individual class instance itself</p>
+  </li>
+  <li>
+    <p>We can call new class instances from within a class method itself (see the truediv function closely)</p>
+  </li>
+</ul>
+
+        
+
+        
+
+        
+        
+          <hr>
+          <footer>
+            
+
+            <p class="text-small text-grey-dk-100 mb-0"></p>
+
+            
+              <div class="d-flex mt-2">
+                
+                
+              </div>
+            
+          </footer>
+        
+
+      </div>
+    </div>
+
+    
+      
+
+      <div class="search-overlay"></div>
+    
+  </div>
+</body>
+</html>
+

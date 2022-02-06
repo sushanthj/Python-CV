@@ -1,1 +1,331 @@
-<!DOCTYPE html><html lang="en-US"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"><link rel="stylesheet" href="/assets/css/just-the-docs-default.css"> <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script> <script type="text/javascript" src="/assets/js/just-the-docs.js"></script><meta name="viewport" content="width=device-width, initial-scale=1"><title>Git Concepts | Python Notes</title><meta name="generator" content="Jekyll v4.2.0" /><meta property="og:title" content="Git Concepts" /><meta property="og:locale" content="en_US" /><meta name="description" content="Python Notes" /><meta property="og:description" content="Python Notes" /><link rel="canonical" href="/git_concepts" /><meta property="og:url" content="/git_concepts" /><meta property="og:site_name" content="Python Notes" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Git Concepts" /> <script type="application/ld+json"> {"@type":"WebPage","url":"/git_concepts","headline":"Git Concepts","description":"Python Notes","@context":"https://schema.org"}</script><body> <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"> <symbol id="svg-link" viewBox="0 0 24 24"><title>Link</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path> </svg> </symbol> <symbol id="svg-search" viewBox="0 0 24 24"><title>Search</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"> <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line> </svg> </symbol> <symbol id="svg-menu" viewBox="0 0 24 24"><title>Menu</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line> </svg> </symbol> <symbol id="svg-arrow-right" viewBox="0 0 24 24"><title>Expand</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline> </svg> </symbol> <symbol id="svg-doc" viewBox="0 0 24 24"><title>Document</title><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline> </svg> </symbol> </svg><div class="side-bar"><div class="site-header"> <a href="/" class="site-title lh-tight"> Python Notes </a> <a href="#" id="menu-button" class="site-button"> <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg> </a></div><nav role="navigation" aria-label="Main" id="site-nav" class="site-nav"><ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a><li class="nav-list-item"><a href="/Objects/" class="nav-list-link">Objects</a><li class="nav-list-item"><a href="/Exceptions+File_Handlers/" class="nav-list-link">Exceptions and File Handling</a><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a><li class="nav-list-item active"><a href="/git_concepts" class="nav-list-link active">Git Concepts</a></ul></nav><footer class="site-footer"> This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.</footer></div><div class="main" id="top"><div id="main-header" class="main-header"><div class="search"><div class="search-input-wrap"> <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off"> <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label></div><div id="search-results" class="search-results"></div></div><nav aria-label="Auxiliary" class="aux-nav"><ul class="aux-nav-list"><li class="aux-nav-list-item"> <a href="//github.com/sushanthj" class="site-button" > Sushanth's GitHub </a></ul></nav></div><div id="main-content-wrap" class="main-content-wrap"><div id="main-content" class="main-content" role="main"> <details open=""> <summary class="text-delta"> Table of contents </summary><ol id="markdown-toc"><li><a href="#before-you-begin" id="markdown-toc-before-you-begin">Before you Begin</a><li><a href="#basics-of-generating-new-content-in-local-and-pushing-to-github" id="markdown-toc-basics-of-generating-new-content-in-local-and-pushing-to-github">Basics of generating new content in local and pushing to github</a><ol><li><a href="#process-for-adding-to-a-github-page" id="markdown-toc-process-for-adding-to-a-github-page">Process for adding to a github page</a><li><a href="#if-you-want-to-track-a-different-branch" id="markdown-toc-if-you-want-to-track-a-different-branch">If you want to track a different branch</a><li><a href="#working-with-remotes" id="markdown-toc-working-with-remotes">Working with remotes</a><li><a href="#if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout" id="markdown-toc-if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout">If you cloned a repo, forked your own branch (using git checkout)</a><li><a href="#points-to-note" id="markdown-toc-points-to-note">Points to Note</a><ol><li><a href="#concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts" id="markdown-toc-concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts">Concepts for working with two repos or two repos on two different github accounts:</a></ol></ol></ol></details><h1 class="fs-9" id="before-you-begin"> <a href="#before-you-begin" class="anchor-heading" aria-labelledby="before-you-begin"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Before you Begin</h1><p><a href="https://www.w3schools.com/git/git_getstarted.asp?remote=github" class="btn fs-5 mb-4 mb-md-0">Reference</a></p><p>In the above link, follow the procedures, but instead of using username and password each time, setup the ssh keys and use them more often</p><p><em>ssh keys are found in ./.ssh folder (or lookup keygen to generate your keys)</em></p><h1 id="basics-of-generating-new-content-in-local-and-pushing-to-github"> <a href="#basics-of-generating-new-content-in-local-and-pushing-to-github" class="anchor-heading" aria-labelledby="basics-of-generating-new-content-in-local-and-pushing-to-github"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Basics of generating new content in local and pushing to github</h1><h2 id="process-for-adding-to-a-github-page"> <a href="#process-for-adding-to-a-github-page" class="anchor-heading" aria-labelledby="process-for-adding-to-a-github-page"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Process for adding to a github page</h2><p>git add . <br /> git commit -m “made new code” <br /> git push or git push origin develop (if you cloned from develop branch)</p><h2 id="if-you-want-to-track-a-different-branch"> <a href="#if-you-want-to-track-a-different-branch" class="anchor-heading" aria-labelledby="if-you-want-to-track-a-different-branch"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> If you want to track a different branch</h2><ul><li>git branch –set-upstream-to=origin/master <br /> git add . <br /> git push</ul><p>or make a new remote</p><ul><li>git remote add ts_origin_wiki git@github.com:sjayanth21/BR_Wiki.git <br /> git push –set-upstream ts_origin_wiki master <br /> git push ts_origin_wiki_master</ul><h2 id="working-with-remotes"> <a href="#working-with-remotes" class="anchor-heading" aria-labelledby="working-with-remotes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Working with remotes</h2><p>Any folder can have a number of remotes like: origin and ts_origin_github</p><p>To make local branch master track a different remote branch (branch in your cloud github repo) do: git branch –set-upstream-to=origin/master</p><p>or git branch –set-upstream-to=origin/develop</p><h2 id="if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout"> <a href="#if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout" class="anchor-heading" aria-labelledby="if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> If you cloned a repo, forked your own branch (using git checkout)</h2><p>You may need to pull from upstream to update your codebase <br /> However, running a simple ‘git pull’ may throw merge conflicts</p><p>So do the following</p><ol><li>Run a ‘git fetch’ to get the updates on all branches (and if any new branch has been added)<li>In your personal branch do git add, commit and push<li>sudo apt install meld<li>Now to get the upstream updates do ‘git checkout develop’<li>Now to put this in your personal branch run ‘git checkout feature/sj’<li>Now we do the actual merging using ‘git merge’<li>The above step would have thrown some merge conflicts, to solve that run ‘git mergetool’<li>The above step opens meld, make all necessary resolutions and save<li>Now our codebase would have been updated to whatever we resolved in meld<li>Now run ‘git commit’ without any arguments as it is a ‘merge commit’<li>Now as usual do ‘git push origin feature/sj’ to push your updated personal branch to github</ol><h2 id="points-to-note"> <a href="#points-to-note" class="anchor-heading" aria-labelledby="points-to-note"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Points to Note</h2><ul><li><p>If you checkout a file ‘git checkout blade.py’ it resets the file to whatever is the latest from that branch in upstream</p><li><p>If you want to physically add or change remotes go to the respective folder and do ‘nano .git/config’</p><li><p>the correct syntax for the merge command is: <br /> ‘git merge ts_origin/master’ <br /> What this does is that if the current branch is origin/develop it will merge the files of <br /> current branch i.e origin/develop with ts_origin/master</p><li><p>Note that even if ts_origin/master is in ts_github account and origin/master is in sushanthj github account, it will still merge as long as remotes exist for both these accounts. If remotes don’t exist, you can always add as shown up above</p></ul><h3 id="concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts"> <a href="#concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts" class="anchor-heading" aria-labelledby="concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Concepts for working with two repos or two repos on two different github accounts:</h3><p>Basically locally you will have ‘master’ branch if you do ‘git branch’ <br /> This master can track two upstream branches using two different remotes <br /> One remote is added automatically when you clone the repo <br /> The next remote will have to be added manually to your other git account or other repo</p><p>Then to push the same commit to both branches first do ‘git push’ <br /> and see which repo it pushes to (say it pushes to origin/master <br /> Then do ‘git push –set-upstream ts_origin/develop’ to push to your second repo <br /> However, do note that your local branch always tracks to the latest branch you pushed to <br /> i.e if you do a git pull, it will pull from the latest branch to which you pushed <br /> in this case it will pull from ts_origin/develop</p><hr><footer><p class="text-small text-grey-dk-100 mb-0"></p><div class="d-flex mt-2"></div></footer></div></div><div class="search-overlay"></div></div>
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="/assets/css/just-the-docs-default.css">
+
+  
+
+  
+    <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script>
+  
+  <script type="text/javascript" src="/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Git Concepts | Python Notes</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Git Concepts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Python Notes" />
+<meta property="og:description" content="Python Notes" />
+<link rel="canonical" href="/git_concepts" />
+<meta property="og:url" content="/git_concepts" />
+<meta property="og:site_name" content="Python Notes" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Git Concepts" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"/git_concepts","headline":"Git Concepts","description":"Python Notes","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="svg-link" viewBox="0 0 24 24">
+      <title>Link</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      </svg>
+    </symbol>
+    <symbol id="svg-search" viewBox="0 0 24 24">
+      <title>Search</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-menu" viewBox="0 0 24 24">
+      <title>Menu</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+        <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+      <title>Expand</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </symbol>
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+      <title>Document</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+      </svg>
+    </symbol>
+  </svg>
+
+  <div class="side-bar">
+    <div class="site-header">
+      <a href="/" class="site-title lh-tight">
+  Python Notes
+
+</a>
+      <a href="#" id="menu-button" class="site-button">
+        <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg>
+      </a>
+    </div>
+    <nav role="navigation" aria-label="Main" id="site-nav" class="site-nav">
+      
+        <ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">Home</a></li><li class="nav-list-item"><a href="/intro/" class="nav-list-link">Intro</a></li><li class="nav-list-item"><a href="/Lists%20and%20Strings/" class="nav-list-link">Lists and Strings</a></li><li class="nav-list-item"><a href="/Dictionaries/" class="nav-list-link">Dictionaries</a></li><li class="nav-list-item"><a href="/Power%20of%20Introspection/" class="nav-list-link">Functions and Modules</a></li><li class="nav-list-item"><a href="/Objects/" class="nav-list-link">Objects</a></li><li class="nav-list-item"><a href="/Exceptions+File_Handlers/" class="nav-list-link">Exceptions and File Handling</a></li><li class="nav-list-item"><a href="/Regex/" class="nav-list-link">RegEx</a></li><li class="nav-list-item"><a href="/File_Ops_and_Parsing/" class="nav-list-link">File Ops and Parsing</a></li><li class="nav-list-item"><a href="/numpy/" class="nav-list-link">Numpy</a></li><li class="nav-list-item"><a href="/CV%20Concepts/" class="nav-list-link">CV Edge Detection and Filters</a></li><li class="nav-list-item"><a href="/OpenCV/" class="nav-list-link">OpenCV</a></li><li class="nav-list-item"><a href="/Multi-Proc,%20JSON,%20usr_inp/" class="nav-list-link">Multi-Processing, JSONS, and User-Inputs</a></li><li class="nav-list-item active"><a href="/git_concepts" class="nav-list-link active">Git Concepts</a></li></ul>
+
+      
+    </nav>
+    <footer class="site-footer">
+      This site uses <a href="https://github.com/pmarsceill/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll.
+    </footer>
+  </div>
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+      
+        <div class="search">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search Python Notes" aria-label="Search Python Notes" autocomplete="off">
+            <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+          </div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      
+      
+      
+        <nav aria-label="Auxiliary" class="aux-nav">
+          <ul class="aux-nav-list">
+            
+              <li class="aux-nav-list-item">
+                <a href="//github.com/sushanthj" class="site-button"
+                  
+                >
+                  Sushanth's GitHub
+                </a>
+              </li>
+            
+          </ul>
+        </nav>
+      
+    </div>
+    <div id="main-content-wrap" class="main-content-wrap">
+      
+        
+      
+      <div id="main-content" class="main-content" role="main">
+        
+          <details open="">
+  <summary class="text-delta">
+    Table of contents
+  </summary>
+<ol id="markdown-toc">
+  <li><a href="#before-you-begin" id="markdown-toc-before-you-begin">Before you Begin</a></li>
+  <li><a href="#basics-of-generating-new-content-in-local-and-pushing-to-github" id="markdown-toc-basics-of-generating-new-content-in-local-and-pushing-to-github">Basics of generating new content in local and pushing to github</a>    <ol>
+      <li><a href="#process-for-adding-to-a-github-page" id="markdown-toc-process-for-adding-to-a-github-page">Process for adding to a github page</a></li>
+      <li><a href="#if-you-want-to-track-a-different-branch" id="markdown-toc-if-you-want-to-track-a-different-branch">If you want to track a different branch</a></li>
+      <li><a href="#working-with-remotes" id="markdown-toc-working-with-remotes">Working with remotes</a></li>
+      <li><a href="#if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout" id="markdown-toc-if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout">If you cloned a repo, forked your own branch (using git checkout)</a></li>
+      <li><a href="#points-to-note" id="markdown-toc-points-to-note">Points to Note</a>        <ol>
+          <li><a href="#concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts" id="markdown-toc-concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts">Concepts for working with two repos or two repos on two different github accounts:</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+</details>
+      <h1 class="fs-9" id="before-you-begin">
+        
+        
+          <a href="#before-you-begin" class="anchor-heading" aria-labelledby="before-you-begin"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Before you Begin
+        
+        
+      </h1>
+    
+
+<p><a href="https://www.w3schools.com/git/git_getstarted.asp?remote=github" class="btn fs-5 mb-4 mb-md-0">Reference</a></p>
+
+<p>In the above link, follow the procedures, but instead of using username and password each time, setup the ssh keys and use them more often</p>
+
+<p><em>ssh keys are found in ./.ssh folder (or lookup keygen to generate your keys)</em></p>
+      <h1 id="basics-of-generating-new-content-in-local-and-pushing-to-github">
+        
+        
+          <a href="#basics-of-generating-new-content-in-local-and-pushing-to-github" class="anchor-heading" aria-labelledby="basics-of-generating-new-content-in-local-and-pushing-to-github"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Basics of generating new content in local and pushing to github
+        
+        
+      </h1>
+    
+      <h2 id="process-for-adding-to-a-github-page">
+        
+        
+          <a href="#process-for-adding-to-a-github-page" class="anchor-heading" aria-labelledby="process-for-adding-to-a-github-page"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Process for adding to a github page
+        
+        
+      </h2>
+    
+
+<p>git add . <br />
+git commit -m “made new code” <br />
+git push or git push origin develop (if you cloned from develop branch)</p>
+      <h2 id="if-you-want-to-track-a-different-branch">
+        
+        
+          <a href="#if-you-want-to-track-a-different-branch" class="anchor-heading" aria-labelledby="if-you-want-to-track-a-different-branch"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> If you want to track a different branch
+        
+        
+      </h2>
+    
+
+<ul>
+  <li>git branch –set-upstream-to=origin/master <br />
+git add . <br />
+git push</li>
+</ul>
+
+<p>or make a new remote</p>
+
+<ul>
+  <li>git remote add ts_origin_wiki git@github.com:sjayanth21/BR_Wiki.git <br />
+git push –set-upstream ts_origin_wiki master <br />
+git push ts_origin_wiki_master</li>
+</ul>
+      <h2 id="working-with-remotes">
+        
+        
+          <a href="#working-with-remotes" class="anchor-heading" aria-labelledby="working-with-remotes"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Working with remotes
+        
+        
+      </h2>
+    
+
+<p>Any folder can have a number of remotes like:
+origin and ts_origin_github</p>
+
+<p>To make local branch master track a different remote branch (branch in your cloud github repo) do:
+git branch –set-upstream-to=origin/master</p>
+
+<p>or git branch –set-upstream-to=origin/develop</p>
+      <h2 id="if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout">
+        
+        
+          <a href="#if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout" class="anchor-heading" aria-labelledby="if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> If you cloned a repo, forked your own branch (using git checkout)
+        
+        
+      </h2>
+    
+
+<p>You may need to pull from upstream to update your codebase <br />
+However, running a simple ‘git pull’ may throw merge conflicts</p>
+
+<p>So do the following</p>
+<ol>
+  <li>Run a ‘git fetch’ to get the updates on all branches (and if any new branch has been added)</li>
+  <li>In your personal branch do git add, commit and push</li>
+  <li>sudo apt install meld</li>
+  <li>Now to get the upstream updates do ‘git checkout develop’</li>
+  <li>Now to put this in your personal branch run ‘git checkout feature/sj’</li>
+  <li>Now we do the actual merging using ‘git merge’</li>
+  <li>The above step would have thrown some merge conflicts, to solve that run ‘git mergetool’</li>
+  <li>The above step opens meld, make all necessary resolutions and save</li>
+  <li>Now our codebase would have been updated to whatever we resolved in meld</li>
+  <li>Now run ‘git commit’ without any arguments as it is a ‘merge commit’</li>
+  <li>Now as usual do ‘git push origin feature/sj’ to push your updated personal branch to github</li>
+</ol>
+      <h2 id="points-to-note">
+        
+        
+          <a href="#points-to-note" class="anchor-heading" aria-labelledby="points-to-note"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Points to Note
+        
+        
+      </h2>
+    
+
+<ul>
+  <li>
+    <p>If you checkout a file ‘git checkout blade.py’ it resets the file to whatever is the latest from that branch in upstream</p>
+  </li>
+  <li>
+    <p>If you want to physically add or change remotes go to the respective folder and do ‘nano .git/config’</p>
+  </li>
+  <li>
+    <p>the correct syntax for the merge command is: <br />
+‘git merge ts_origin/master’ <br />
+What this does is that if the current branch is origin/develop it will merge the files of <br />
+current branch i.e origin/develop with ts_origin/master</p>
+  </li>
+  <li>
+    <p>Note that even if ts_origin/master is in ts_github account and origin/master is in sushanthj github account, it will still merge as long as remotes exist for both these accounts. If remotes don’t exist, you can always add as shown up above</p>
+  </li>
+</ul>
+      <h3 id="concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts">
+        
+        
+          <a href="#concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts" class="anchor-heading" aria-labelledby="concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Concepts for working with two repos or two repos on two different github accounts:
+        
+        
+      </h3>
+    
+
+<p>Basically locally you will have ‘master’ branch if you do ‘git branch’ <br />
+This master can track two upstream branches using two different remotes <br />
+One remote is added automatically when you clone the repo <br />
+The next remote will have to be added manually to your other git account or other repo</p>
+
+<p>Then to push the same commit to both branches first do ‘git push’ <br />
+and see which repo it pushes to (say it pushes to origin/master <br />
+Then do ‘git push –set-upstream ts_origin/develop’ to push to your second repo <br />
+However, do note that your local branch always tracks to the latest branch you pushed to <br />
+i.e if you do a git pull, it will pull from the latest branch to which you pushed <br />
+in this case it will pull from ts_origin/develop</p>
+
+        
+
+        
+
+        
+        
+          <hr>
+          <footer>
+            
+
+            <p class="text-small text-grey-dk-100 mb-0"></p>
+
+            
+              <div class="d-flex mt-2">
+                
+                
+              </div>
+            
+          </footer>
+        
+
+      </div>
+    </div>
+
+    
+      
+
+      <div class="search-overlay"></div>
+    
+  </div>
+</body>
+</html>
+
