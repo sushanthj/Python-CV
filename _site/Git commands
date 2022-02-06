@@ -1,0 +1,22 @@
+Process for adding to heroku page
+
+git add .
+git commit -m ""
+git remote add ts_origin_wiki git@github.com:sjayanth21/BR_Wiki.git
+git push --set-upstream ts_origin_wiki master
+git push ts_origin_wiki_master
+
+
+Process for adding to python notes github
+
+git add .
+git commit -m ""
+git push --set-upstream ts_origin_github (add ssh link like above if necessary)
+git push ts_origin_github
+
+the two remotes we have on current machine are:
+origin and ts_origin_github
+
+To make local branch master track a different remote branch (branch in your cloud github repo) do:
+git branch --set-upstream-to=origin/master
+
