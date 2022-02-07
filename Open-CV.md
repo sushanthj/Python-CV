@@ -525,15 +525,19 @@ Now we need to link this new opencv to python:
 
 sudo /bin/bash -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf'
 ________________________________________________________________________________________________________________________________
+```
 
 References:
-https://gist.github.com/raulqf/f42c718a658cddc16f9df07ecc627be7
-https://learnopencv.com/opencv-dnn-with-gpu-support/
-https://docs.opencv.org/4.x/d6/d15/tutorial_building_tegra_cuda.html
+[build reference](https://gist.github.com/raulqf/f42c718a658cddc16f9df07ecc627be7)
+[learnopencv.com/opencv-dnn-with-gpu-support](https://learnopencv.com/opencv-dnn-with-gpu-support/)
+[docs.opencv.org/4.x/d6/d15/tutorial_building_tegra_cuda](https://docs.opencv.org/4.x/d6/d15/tutorial_building_tegra_cuda.html)
 
 Use the below link to understand how we can use cuda for generic opencv functions
-https://medium.com/dropout-analytics/opencv-cuda-for-videos-f3dcf346e398
-```
+[medium.com/dropout-analytics/opencv-cuda-for-videos](https://medium.com/dropout-analytics/opencv-cuda-for-videos-f3dcf346e398)
+
+[Opencv documentation for cuda](https://docs.opencv.org/4.5.1/d1/d1e/group__cuda.html)
+
+
 
 ## Example of cv2.cuda
 
