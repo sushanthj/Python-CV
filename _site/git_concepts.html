@@ -144,6 +144,8 @@
       <li><a href="#if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout" id="markdown-toc-if-you-cloned-a-repo-forked-your-own-branch-using-git-checkout">If you cloned a repo, forked your own branch (using git checkout)</a></li>
       <li><a href="#points-to-note" id="markdown-toc-points-to-note">Points to Note</a>        <ol>
           <li><a href="#concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts" id="markdown-toc-concepts-for-working-with-two-repos-or-two-repos-on-two-different-github-accounts">Concepts for working with two repos or two repos on two different github accounts:</a></li>
+          <li><a href="#saving-a-patch-file" id="markdown-toc-saving-a-patch-file">Saving a patch file</a></li>
+          <li><a href="#saving-changes-by-stashing" id="markdown-toc-saving-changes-by-stashing">Saving changes by stashing</a></li>
         </ol>
       </li>
     </ol>
@@ -238,11 +240,11 @@ However, running a simple ‘git pull’ may throw merge conflicts</p>
 <p>So do the following</p>
 <ol>
   <li>Run a ‘git fetch’ to get the updates on all branches (and if any new branch has been added)</li>
-  <li>In your personal branch do git add, commit and push</li>
+  <li>In your personal branch commit all changes by doing: git add, commit and push</li>
   <li>sudo apt install meld</li>
-  <li>Now to get the upstream updates do ‘git checkout develop’</li>
+  <li>Now to get the upstream updates do ‘git checkout develop’ (whichever is the main branch)</li>
   <li>Now to put this in your personal branch run ‘git checkout feature/sj’</li>
-  <li>Now we do the actual merging using ‘git merge’</li>
+  <li>Now we do the actual merging using ‘git merge develop’ (this will merge everythin in deveop into the current branch viz feature/sj)</li>
   <li>The above step would have thrown some merge conflicts, to solve that run ‘git mergetool’</li>
   <li>The above step opens meld, make all necessary resolutions and save</li>
   <li>Now our codebase would have been updated to whatever we resolved in meld</li>
@@ -295,6 +297,55 @@ Then do ‘git push –set-upstream ts_origin/develop’ to push to your second 
 However, do note that your local branch always tracks to the latest branch you pushed to <br />
 i.e if you do a git pull, it will pull from the latest branch to which you pushed <br />
 in this case it will pull from ts_origin/develop</p>
+      <h3 id="saving-a-patch-file">
+        
+        
+          <a href="#saving-a-patch-file" class="anchor-heading" aria-labelledby="saving-a-patch-file"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Saving a patch file
+        
+        
+      </h3>
+    
+<p>If you have changes made which you want to save locally and not push to remote, you can save a patch file</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff <span class="o">&gt;</span> new_changes.patch
+</code></pre></div></div>
+
+<p>Now to apply this patch onto any branch, do:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git apply new_changes.patch
+</code></pre></div></div>
+      <h3 id="saving-changes-by-stashing">
+        
+        
+          <a href="#saving-changes-by-stashing" class="anchor-heading" aria-labelledby="saving-changes-by-stashing"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Saving changes by stashing
+        
+        
+      </h3>
+    
+
+<p>Instead of saving a specific file for changes (such as a patch file), you could also stash your changes locally</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash
+</code></pre></div></div>
+<p>The above command will stash all tracked changes. You could also stash only committed changes. Refer: <a href="https://www.atlassian.com/git/tutorials/saving-changes/git-stash">stashing</a></p>
+
+<p>To then apply the stashed changes (one time use only as pop will remove from stash)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash pop
+</code></pre></div></div>
+
+<p>To apply without popping do:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash apply
+</code></pre></div></div>
+
+<p>To remove any particular item in stash:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash drop
+</code></pre></div></div>
+
+<p>To view all entries in stash and then apply specific one do:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash list
+git stash apply n
+</code></pre></div></div>
+
+<p>n = stash item number</p>
 
         
 
