@@ -35,5 +35,5 @@ gem "webrick", "~> 1.7"
 gem 'bundler'
 gem 'rack-contrib'
 gem 'kramdown'
-gem 'puma'
+gem 'puma', ">= 5.6.2"
 gem 'rake'

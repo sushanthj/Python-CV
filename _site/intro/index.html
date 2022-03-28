@@ -137,7 +137,33 @@
 
 <p>To deploy on heroku follow the steps in the link below (and use the gem files, rake files and proc files in this repo for reference)</p>
 
+<p>The following files will need to be copied from this repo:</p>
+<ul>
+  <li>config.ru</li>
+  <li>Rakefile</li>
+  <li>Procfile</li>
+  <li>static.json</li>
+  <li>config.yaml (only the differences)</li>
+</ul>
+
+<p>And only if necessary:</p>
+<ul>
+  <li>Gemfile</li>
+  <li>Gemfile.lock</li>
+  <li>remove _sites from .gitignore</li>
+</ul>
+
+<p>Run bundle exec jekyll serve after making the above changes</p>
+
+<p>After copying these files (or their necessary contents), install heroku cli and do:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku login
+</code></pre></div></div>
+
+<p>Then do heroku create as per the below link and the other steps necessary (git push heroku master)</p>
+
 <p><a href="https://blog.heroku.com/jekyll-on-heroku">Deploy jekyll on heroku</a></p>
+
+<p>Finally, go to heroku page -&gt; settings -&gt; change the name of the app and find the url</p>
 
         
 
