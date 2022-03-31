@@ -139,6 +139,7 @@
   <li><a href="#before-you-begin" id="markdown-toc-before-you-begin">Before you Begin</a></li>
   <li><a href="#understanding-the-pool-loop-for-multi-processsing" id="markdown-toc-understanding-the-pool-loop-for-multi-processsing">Understanding the Pool loop for Multi-Processsing</a></li>
   <li><a href="#understanding-json-files" id="markdown-toc-understanding-json-files">Understanding JSON files</a></li>
+  <li><a href="#multi-threading-and-finding-box-ious-by-comparing-two-images" id="markdown-toc-multi-threading-and-finding-box-ious-by-comparing-two-images">Multi-Threading and Finding box IOUs by comparing two images</a></li>
   <li><a href="#user-inputs-using-argparse" id="markdown-toc-user-inputs-using-argparse">User Inputs using argparse</a></li>
 </ol>
 
@@ -247,6 +248,279 @@
 
 <p><em>Note that if a = [1,2,3,4] and b = {‘1’:1, ‘2’:2} the method of accessing list and dict elements is a[1] or b[‘1’]</em> <br />
 <strong>i.e. both a[] and b[] use square brackets</strong></p>
+      <h1 id="multi-threading-and-finding-box-ious-by-comparing-two-images">
+        
+        
+          <a href="#multi-threading-and-finding-box-ious-by-comparing-two-images" class="anchor-heading" aria-labelledby="multi-threading-and-finding-box-ious-by-comparing-two-images"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Multi-Threading and Finding box IOUs by comparing two images
+        
+        
+      </h1>
+    
+
+<p>Using the json above as reference, we can iterate over ‘annotations’ which is a list of images. Here we will specify the index of the annotations list (to give image)</p>
+
+<p>Also, IOU will be computed for each matching image between rgb and depth. <br />
+The jsons for the same are given below:</p>
+
+<p><img src="/code/orig_sync_first_run_depth.json" alt="" />
+<img src="/code/orig_sync_first_run_rgb.json" alt="" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">click</span> <span class="kn">import</span> <span class="n">argument</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="n">DEV_DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">DEPTH_JSON_PATH</span> <span class="o">=</span> <span class="s">'/home/sush/TS/depth_testing/visualisation/29_mar/test/orig_sync_first_run_depth.json'</span>
+<span class="n">RGB_JSON_PATH</span> <span class="o">=</span> <span class="s">'/home/sush/TS/depth_testing/visualisation/29_mar/test/orig_sync_first_run_rgb.json'</span>
+<span class="n">IOU_DEPTH_JSON_PATH</span> <span class="o">=</span> <span class="s">'/home/sush/TS/depth_testing/visualisation/29_mar/test/depth_with_IOU.json'</span>
+
+<span class="n">DEBUG_PATHS</span> <span class="o">=</span> <span class="p">[</span><span class="s">'/home/sush/TS/depth_testing/visualisation/29_mar/test/depth_boxes'</span><span class="p">,</span>
+                <span class="s">'/home/sush/TS/depth_testing/visualisation/29_mar/test/rgb_boxes'</span><span class="p">,]</span>
+
+<span class="n">IMAGES_PATH</span> <span class="o">=</span> <span class="s">'/media/sush/TS-SW/depth-rgb_annotation/orig_sync_first_run'</span>
+
+<span class="n">temp_depth_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="mf">3.89132313e-01</span><span class="p">,</span> <span class="mf">9.95275561e-03</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.80530840e+01</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">1.13047061e-02</span><span class="p">,</span> <span class="mf">4.02265886e-01</span><span class="p">,</span> <span class="mf">9.35364939e+01</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">2.31427742e-05</span><span class="p">,</span> <span class="mf">1.56034534e-05</span><span class="p">,</span> <span class="mf">1.00000000e+00</span>
+    <span class="p">])</span>
+    
+<span class="n">DEPTH_TRANS_MATRIX</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">temp_depth_matrix</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">get_depth_data</span><span class="p">():</span>
+    <span class="n">depth_dict</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">DEPTH_JSON_PATH</span><span class="p">,</span><span class="s">'r'</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">depth_dict</span>
+
+<span class="k">def</span> <span class="nf">transform_rgb_json</span><span class="p">():</span>
+    <span class="s">'''
+    This function will open both RGB json and transform the boxes using homography transformation
+    '''</span>
+    <span class="n">rgb_dict</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">RGB_JSON_PATH</span><span class="p">,</span><span class="s">'r'</span><span class="p">))</span>
+    <span class="n">transformed_dict</span> <span class="o">=</span> <span class="n">copy</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">rgb_dict</span><span class="p">)</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">])):</span>
+            <span class="n">box_coords</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'box_coordinates'</span><span class="p">]</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">box_coords</span>
+            <span class="n">point1</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">)</span>
+            <span class="n">point2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+            <span class="n">x1t</span><span class="p">,</span> <span class="n">y1t</span> <span class="o">=</span> <span class="n">transform_bbox</span><span class="p">(</span><span class="n">point1</span><span class="p">)</span>
+            <span class="n">x2t</span><span class="p">,</span> <span class="n">y2t</span> <span class="o">=</span> <span class="n">transform_bbox</span><span class="p">(</span><span class="n">point2</span><span class="p">)</span>
+            <span class="n">transformed_box_coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1t</span><span class="p">,</span> <span class="n">y1t</span><span class="p">,</span> <span class="n">x2t</span><span class="p">,</span> <span class="n">y2t</span><span class="p">]</span>
+            <span class="n">transformed_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'box_coordinates'</span><span class="p">]</span> <span class="o">=</span> <span class="n">transformed_box_coords</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"finished transforming rbg json"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">transformed_dict</span><span class="p">,</span> <span class="n">rgb_dict</span>
+
+<span class="k">def</span> <span class="nf">transform_bbox</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+    <span class="s">"""
+    Transform a point using the transformation matrix
+
+    Args:
+        point (tuple): (x, y) coords of a point
+        transform_matrix (np.array): 3x3 transformation matrix
+    Returns:
+        tuple: (x, y) coords of the transformed point
+    """</span>
+    <span class="c1"># Create [x, y, 0] 3x1 vector for easy dot product in next step
+</span>    <span class="n">box_coord</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="c1"># Transform the point using dot product. It gives [x', y', s] where s- scaling
+</span>    <span class="n">transformed_point</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">DEPTH_TRANS_MATRIX</span><span class="p">,</span> <span class="n">box_coord</span><span class="p">)</span>
+
+    <span class="c1"># Divide x, y by the scaling factor
+</span>    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">transformed_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">transformed_point</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">transformed_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">transformed_point</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">record_IOU</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">,</span> <span class="n">rgb_dict</span><span class="p">):</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]</span>
+    <span class="n">IOU_tracker</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rgb_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)):</span>
+        <span class="n">required_image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">rgb_i</span><span class="p">][</span><span class="s">'original_image_path'</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'original_image_path'</span><span class="p">]</span> <span class="o">==</span> <span class="n">required_image</span><span class="p">:</span>
+                <span class="c1"># maybe need deepcopy for below 2 lines?
+</span>                <span class="n">rgb_boxes</span> <span class="o">=</span> <span class="n">rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">rgb_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">]</span>
+                <span class="n">depth_boxes</span> <span class="o">=</span> <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rgb_boxes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">depth_boxes</span><span class="p">):</span>
+                    <span class="n">IOU_for_depth_boxes</span> <span class="o">=</span> <span class="n">find_best_IOU</span><span class="p">(</span><span class="n">depth_boxes</span><span class="p">,</span> <span class="n">rgb_boxes</span><span class="p">)</span>
+                    <span class="c1"># iterate over depth boxes to add IOU for each box
+</span>                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">IOU_for_depth_boxes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">depth_boxes</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">IOU_for_depth_boxes</span><span class="p">)):</span>
+                            <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'box_attr'</span><span class="p">][</span><span class="s">"IOU_with_RGB"</span><span class="p">]</span> <span class="o">=</span> <span class="n">IOU_for_depth_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                            <span class="n">IOU_tracker</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">IOU_for_depth_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">IOU_for_depth_boxes</span><span class="p">)):</span>
+                            <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'box_attr'</span><span class="p">][</span><span class="s">"IOU_with_RGB"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"improper_matching"</span>
+                            <span class="n">IOU_tracker</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">IOU_for_depth_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">depth_dict</span><span class="p">,</span> <span class="n">IOU_tracker</span>
+
+<span class="k">def</span> <span class="nf">find_best_IOU</span><span class="p">(</span><span class="n">depth_boxes</span><span class="p">,</span> <span class="n">rgb_boxes</span><span class="p">):</span>
+    <span class="s">'''
+    Calculate IOU of each box combination
+
+    Args:
+        Takes multiple depth boxes (and same number of rgb boxes)
+    Returns:
+        IOU for each box in form of a list whose len = no. of boxes
+    '''</span>
+    <span class="n">depth_boxes_IOU</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depth_boxes</span><span class="p">)):</span>
+        <span class="n">current_dbox</span> <span class="o">=</span> <span class="n">depth_boxes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">"box_coordinates"</span><span class="p">]</span>
+        <span class="n">possible_dbox_IOUs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rgb_boxes</span><span class="p">)):</span>
+            <span class="n">candidate_rbox</span> <span class="o">=</span> <span class="n">rgb_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="s">"box_coordinates"</span><span class="p">]</span>
+            <span class="n">possible_dbox_IOUs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">calc_iou</span><span class="p">(</span><span class="n">current_dbox</span><span class="p">,</span> <span class="n">candidate_rbox</span><span class="p">))</span>
+        <span class="n">depth_boxes_IOU</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">possible_dbox_IOUs</span><span class="p">)))</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Box IOU's are: "</span><span class="p">,</span> <span class="n">depth_boxes_IOU</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">depth_boxes_IOU</span>
+
+<span class="k">def</span> <span class="nf">calc_iou</span><span class="p">(</span><span class="n">boxA</span><span class="p">,</span> <span class="n">boxB</span><span class="p">):</span>
+    <span class="c1"># determine the (x, y)-coordinates of the intersection rectangle
+</span>    <span class="n">xA</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">yA</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xB</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">yB</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="c1"># compute the area of intersection rectangle
+</span>    <span class="n">interArea</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xB</span> <span class="o">-</span> <span class="n">xA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">yB</span> <span class="o">-</span> <span class="n">yA</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># compute the area of both the prediction and ground-truth
+</span>    <span class="c1"># rectangles
+</span>    <span class="n">boxAArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">boxA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">boxA</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">boxA</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">boxBArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">boxB</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">boxB</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">boxB</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># compute the intersection over union by taking the intersection
+</span>    <span class="c1"># area and dividing it by the sum of prediction + ground-truth
+</span>    <span class="c1"># areas - the interesection area
+</span>    <span class="n">iou</span> <span class="o">=</span> <span class="n">interArea</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">boxAArea</span> <span class="o">+</span> <span class="n">boxBArea</span> <span class="o">-</span> <span class="n">interArea</span><span class="p">)</span>
+    <span class="c1"># return the intersection over union value
+</span>    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">iou</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">write_meta</span><span class="p">(</span><span class="n">new_dict</span><span class="p">,</span> <span class="n">new_json_path</span><span class="o">=</span><span class="n">IOU_DEPTH_JSON_PATH</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_json_path</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="n">json</span><span class="p">.</span><span class="n">dump</span><span class="p">(</span><span class="n">new_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">calc_average_IOU</span><span class="p">(</span><span class="n">IOU_list</span><span class="p">):</span>
+    <span class="n">IOU</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">IOU_list</span><span class="p">)</span>
+    <span class="n">IOU</span><span class="o">=</span> <span class="n">IOU</span><span class="p">[</span><span class="n">IOU</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="n">avg_IOU</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">IOU</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"average IOU for all boxes is :"</span><span class="p">,</span> <span class="n">avg_IOU</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">collate_debug_images</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">,</span> <span class="n">depth_dict</span><span class="p">,</span> <span class="n">orig_rgb_dict</span><span class="p">):</span>
+    <span class="c1"># create folders to put debug images in
+</span>    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">DEBUG_PATHS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="s">'''
+    wrtiing rgb to disk
+    '''</span>
+    <span class="c1"># define threads for multi-threading
+</span>    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="c1"># multi-threading for processing rgb images
+</span>    <span class="n">rgb_argument_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orig_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]))</span> 
+    <span class="k">with</span> <span class="n">pool</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">write_rgb_to_disk</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rgb_argument_list</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">orig_rgb_dict</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"finished writing rgb images to disk"</span><span class="p">)</span>
+    
+    <span class="s">'''
+    writing depth to disk
+    '''</span>
+    <span class="c1"># define threads for multi-threading
+</span>    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="c1"># multi-threading for processing depth images
+</span>    <span class="n">depth_argument_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]))</span>
+    <span class="k">with</span> <span class="n">pool</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">write_depth_to_disk</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">depth_argument_list</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">),</span> <span class="n">repeat</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"finished writing depth images to disk"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">write_depth_to_disk</span><span class="p">(</span><span class="n">rgb_i</span><span class="p">,</span> <span class="n">trans_rgb_dict</span><span class="p">,</span> <span class="n">depth_dict</span><span class="p">):</span>
+    <span class="n">required_image</span> <span class="o">=</span> <span class="n">trans_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">rgb_i</span><span class="p">][</span><span class="s">'original_image_path'</span><span class="p">]</span>
+    <span class="n">depth_img</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">dep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">])):</span>
+        <span class="k">if</span> <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'original_image_path'</span><span class="p">]</span> <span class="o">==</span> <span class="n">required_image</span><span class="p">:</span>
+            <span class="c1"># boxes extracted from RGB image annotation
+</span>            <span class="n">trans_bboxes</span> <span class="o">=</span> <span class="n">trans_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">rgb_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">]</span>
+            <span class="c1"># boxes from depth annotation
+</span>            <span class="n">ann_bboxes</span> <span class="o">=</span> <span class="n">depth_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">dep_i</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">]</span>
+            
+            <span class="n">depth_img_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">IMAGES_PATH</span><span class="p">,</span> <span class="s">"depth_pts"</span><span class="p">,</span> <span class="s">"images"</span><span class="p">,</span> <span class="n">required_image</span><span class="p">)</span>
+            <span class="n">depth_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="n">depth_img_path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">j1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trans_bboxes</span><span class="p">)):</span>
+                <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">trans_bboxes</span><span class="p">[</span><span class="n">j1</span><span class="p">][</span><span class="s">'box_coordinates'</span><span class="p">]</span>
+                <span class="n">depth_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">depth_img</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),(</span><span class="mi">30</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ann_bboxes</span><span class="p">)):</span>
+                <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">ann_bboxes</span><span class="p">[</span><span class="n">j2</span><span class="p">][</span><span class="s">'box_coordinates'</span><span class="p">]</span>
+                <span class="n">depth_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">depth_img</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">depth_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">((</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">DEBUG_PATHS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">required_image</span><span class="p">)),</span><span class="n">depth_img</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">write_rgb_to_disk</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">orig_rgb_dict</span><span class="p">):</span>
+    <span class="n">rgb_img</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">rgb_img_name</span> <span class="o">=</span> <span class="n">orig_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s">"original_image_path"</span><span class="p">]</span>
+    <span class="n">rgb_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">IMAGES_PATH</span><span class="p">,</span> <span class="s">"camtop_raw"</span><span class="p">,</span> <span class="s">"images"</span><span class="p">,</span> 
+                                        <span class="n">rgb_img_name</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">bboxes</span> <span class="o">=</span> <span class="n">orig_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s">'bbox_info'</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bboxes</span><span class="p">)):</span>
+        <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">bboxes</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="s">'box_coordinates'</span><span class="p">]</span>
+        <span class="n">rgb_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">rgb_img</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),(</span><span class="mi">30</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">rgb_img</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">((</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">DEBUG_PATHS</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">rgb_img_name</span><span class="p">)),</span><span class="n">rgb_img</span><span class="p">)</span>
+            
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">transformed_rgb_dict</span><span class="p">,</span> <span class="n">orig_rgb_dict</span> <span class="o">=</span> <span class="n">transform_rgb_json</span><span class="p">()</span>
+    <span class="n">depth_dict</span> <span class="o">=</span> <span class="n">get_depth_data</span><span class="p">()</span>
+    <span class="n">depth_dict_with_IOU</span><span class="p">,</span> <span class="n">IOU_list</span> <span class="o">=</span> <span class="n">record_IOU</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">,</span> <span class="n">transformed_rgb_dict</span><span class="p">)</span>
+    <span class="n">calc_average_IOU</span><span class="p">(</span><span class="n">IOU_list</span><span class="p">)</span>
+    <span class="n">write_meta</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">DEV_DEBUG</span><span class="p">:</span>
+        <span class="n">collate_debug_images</span><span class="p">(</span><span class="n">transformed_rgb_dict</span><span class="p">,</span> <span class="n">depth_dict</span><span class="p">,</span> <span class="n">orig_rgb_dict</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In the above script, the <em>collate debug images</em> function uses pool to specify the max no. of threads before each multi-threading run.</p>
+
+<p>This multi-threading takes an iterable and a specific target function just like multi-processing.</p>
+
+<p>Also, since the jsons are input to the target function multiple times (without any change), they can be zipped and iterated using <strong>repeat</strong> as shown:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">collate_debug_images</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">,</span> <span class="n">depth_dict</span><span class="p">,</span> <span class="n">orig_rgb_dict</span><span class="p">):</span>
+    <span class="c1"># create folders to put debug images in
+</span>    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">DEBUG_PATHS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="s">'''
+    wrtiing rgb to disk
+    '''</span>
+    <span class="c1"># define threads for multi-threading
+</span>    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="c1"># multi-threading for processing rgb images
+</span>    <span class="n">rgb_argument_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orig_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]))</span> 
+    <span class="k">with</span> <span class="n">pool</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">write_rgb_to_disk</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rgb_argument_list</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">orig_rgb_dict</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"finished writing rgb images to disk"</span><span class="p">)</span>
+    
+    <span class="s">'''
+    writing depth to disk
+    '''</span>
+    <span class="c1"># define threads for multi-threading
+</span>    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="c1"># multi-threading for processing depth images
+</span>    <span class="n">depth_argument_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">[</span><span class="s">'annotations'</span><span class="p">]))</span>
+    <span class="k">with</span> <span class="n">pool</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">write_depth_to_disk</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">depth_argument_list</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="n">trans_rgb_dict</span><span class="p">),</span> <span class="n">repeat</span><span class="p">(</span><span class="n">depth_dict</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"finished writing depth images to disk"</span><span class="p">)</span>
+</code></pre></div></div>
       <h1 id="user-inputs-using-argparse">
         
         

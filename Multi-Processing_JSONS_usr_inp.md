@@ -103,6 +103,276 @@ A typical json file is shown below. It is just a list of dictionaries
 *Note that if a = [1,2,3,4] and b = {'1':1, '2':2} the method of accessing list and dict elements is a[1] or b['1']* \
 **i.e. both a[] and b[] use square brackets**
 
+# Multi-Threading and Finding box IOUs by comparing two images
+
+Using the json above as reference, we can iterate over 'annotations' which is a list of images. Here we will specify the index of the annotations list (to give image)
+
+Also, IOU will be computed for each matching image between rgb and depth. \
+The jsons for the same are given below:
+
+![](/code/orig_sync_first_run_depth.json)
+![](/code/orig_sync_first_run_rgb.json)
+
+```python
+from itertools import repeat
+import json
+from click import argument
+import numpy as np
+import copy
+import os
+import cv2
+
+from multiprocessing import Pool
+from tqdm import tqdm
+
+DEV_DEBUG = True
+
+DEPTH_JSON_PATH = '/home/sush/TS/depth_testing/visualisation/29_mar/test/orig_sync_first_run_depth.json'
+RGB_JSON_PATH = '/home/sush/TS/depth_testing/visualisation/29_mar/test/orig_sync_first_run_rgb.json'
+IOU_DEPTH_JSON_PATH = '/home/sush/TS/depth_testing/visualisation/29_mar/test/depth_with_IOU.json'
+
+DEBUG_PATHS = ['/home/sush/TS/depth_testing/visualisation/29_mar/test/depth_boxes',
+                '/home/sush/TS/depth_testing/visualisation/29_mar/test/rgb_boxes',]
+
+IMAGES_PATH = '/media/sush/TS-SW/depth-rgb_annotation/orig_sync_first_run'
+
+temp_depth_matrix = np.array([
+    3.89132313e-01, 9.95275561e-03, -1.80530840e+01,
+    -1.13047061e-02, 4.02265886e-01, 9.35364939e+01,
+    -2.31427742e-05, 1.56034534e-05, 1.00000000e+00
+    ])
+    
+DEPTH_TRANS_MATRIX = np.reshape(temp_depth_matrix,(3,3))
+
+def get_depth_data():
+    depth_dict = json.load(open(DEPTH_JSON_PATH,'r'))
+    return depth_dict
+
+def transform_rgb_json():
+    '''
+    This function will open both RGB json and transform the boxes using homography transformation
+    '''
+    rgb_dict = json.load(open(RGB_JSON_PATH,'r'))
+    transformed_dict = copy.deepcopy(rgb_dict)
+    images = rgb_dict['annotations']
+    for i in range(len(images)):
+        for j in range(len(images[i]['bbox_info'])):
+            box_coords = images[i]['bbox_info'][j]['box_coordinates']
+            x1, y1, x2, y2 = box_coords
+            point1 = (x1,y1)
+            point2 = (x2,y2)
+            x1t, y1t = transform_bbox(point1)
+            x2t, y2t = transform_bbox(point2)
+            transformed_box_coords = [x1t, y1t, x2t, y2t]
+            transformed_dict['annotations'][i]['bbox_info'][j]['box_coordinates'] = transformed_box_coords
+    print("finished transforming rbg json")
+    return transformed_dict, rgb_dict
+
+def transform_bbox(point):
+    """
+    Transform a point using the transformation matrix
+
+    Args:
+        point (tuple): (x, y) coords of a point
+        transform_matrix (np.array): 3x3 transformation matrix
+    Returns:
+        tuple: (x, y) coords of the transformed point
+    """
+    # Create [x, y, 0] 3x1 vector for easy dot product in next step
+    box_coord = np.array([[point[0]], [point[1]], [1]])
+
+    # Transform the point using dot product. It gives [x', y', s] where s- scaling
+    transformed_point = np.dot(DEPTH_TRANS_MATRIX, box_coord)
+
+    # Divide x, y by the scaling factor
+    x = int(transformed_point[0] / transformed_point[2])
+    y = int(transformed_point[1] / transformed_point[2])
+    return x, y
+
+def record_IOU(depth_dict, rgb_dict):
+    images = rgb_dict['annotations']
+    IOU_tracker = []
+    for rgb_i in range(len(images)):
+        required_image = images[rgb_i]['original_image_path']
+        for dep_i in range(len(depth_dict['annotations'])):
+            if depth_dict['annotations'][dep_i]['original_image_path'] == required_image:
+                # maybe need deepcopy for below 2 lines?
+                rgb_boxes = rgb_dict['annotations'][rgb_i]['bbox_info']
+                depth_boxes = depth_dict['annotations'][dep_i]['bbox_info']
+                if len(rgb_boxes) == len(depth_boxes):
+                    IOU_for_depth_boxes = find_best_IOU(depth_boxes, rgb_boxes)
+                    # iterate over depth boxes to add IOU for each box
+                    if len(IOU_for_depth_boxes) == len(depth_boxes):
+                        for j in range(len(IOU_for_depth_boxes)):
+                            depth_dict['annotations'][dep_i]['bbox_info'][j]['box_attr']["IOU_with_RGB"] = IOU_for_depth_boxes[j]
+                            IOU_tracker.append(IOU_for_depth_boxes[j])
+                    else:
+                        for j in range(len(IOU_for_depth_boxes)):
+                            depth_dict['annotations'][dep_i]['bbox_info'][j]['box_attr']["IOU_with_RGB"] = "improper_matching"
+                            IOU_tracker.append(IOU_for_depth_boxes[j])
+    
+    return depth_dict, IOU_tracker
+
+def find_best_IOU(depth_boxes, rgb_boxes):
+    '''
+    Calculate IOU of each box combination
+
+    Args:
+        Takes multiple depth boxes (and same number of rgb boxes)
+    Returns:
+        IOU for each box in form of a list whose len = no. of boxes
+    '''
+    depth_boxes_IOU = []
+    for i in range(len(depth_boxes)):
+        current_dbox = depth_boxes[i]["box_coordinates"]
+        possible_dbox_IOUs = []
+        for j in range(len(rgb_boxes)):
+            candidate_rbox = rgb_boxes[j]["box_coordinates"]
+            possible_dbox_IOUs.append(calc_iou(current_dbox, candidate_rbox))
+        depth_boxes_IOU.append(np.max(np.array(possible_dbox_IOUs)))
+    
+    print("Box IOU's are: ", depth_boxes_IOU)
+    return depth_boxes_IOU
+
+def calc_iou(boxA, boxB):
+    # determine the (x, y)-coordinates of the intersection rectangle
+    xA = max(boxA[0], boxB[0])
+    yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2])
+    yB = min(boxA[3], boxB[3])
+    # compute the area of intersection rectangle
+    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+    # compute the area of both the prediction and ground-truth
+    # rectangles
+    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
+    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
+    # compute the intersection over union by taking the intersection
+    # area and dividing it by the sum of prediction + ground-truth
+    # areas - the interesection area
+    iou = interArea / float(boxAArea + boxBArea - interArea)
+    # return the intersection over union value
+    return round(iou,3)
+
+def write_meta(new_dict, new_json_path=IOU_DEPTH_JSON_PATH):
+        with open(new_json_path, "w") as outfile:
+            json.dump(new_dict, outfile)
+
+def calc_average_IOU(IOU_list):
+    IOU = np.array(IOU_list)
+    IOU= IOU[IOU != 0.0]
+    avg_IOU = np.mean(IOU)
+    print("average IOU for all boxes is :", avg_IOU)
+
+def collate_debug_images(trans_rgb_dict, depth_dict, orig_rgb_dict):
+    # create folders to put debug images in
+    for path in DEBUG_PATHS:
+        if not os.path.exists(path):
+            os.makedirs(path)
+    '''
+    wrtiing rgb to disk
+    '''
+    # define threads for multi-threading
+    pool = Pool(15)
+    # multi-threading for processing rgb images
+    rgb_argument_list = range(len(orig_rgb_dict['annotations'])) 
+    with pool as p:
+        p.starmap(write_rgb_to_disk, zip(rgb_argument_list, repeat(orig_rgb_dict)))
+    print("finished writing rgb images to disk")
+    
+    '''
+    writing depth to disk
+    '''
+    # define threads for multi-threading
+    pool = Pool(15)
+    # multi-threading for processing depth images
+    depth_argument_list = range(len(trans_rgb_dict['annotations']))
+    with pool as p:
+        p.starmap(write_depth_to_disk, zip(depth_argument_list, repeat(trans_rgb_dict), repeat(depth_dict)))
+    print("finished writing depth images to disk")
+
+def write_depth_to_disk(rgb_i, trans_rgb_dict, depth_dict):
+    required_image = trans_rgb_dict['annotations'][rgb_i]['original_image_path']
+    depth_img = None
+    for dep_i in range(len(depth_dict['annotations'])):
+        if depth_dict['annotations'][dep_i]['original_image_path'] == required_image:
+            # boxes extracted from RGB image annotation
+            trans_bboxes = trans_rgb_dict['annotations'][rgb_i]['bbox_info']
+            # boxes from depth annotation
+            ann_bboxes = depth_dict['annotations'][dep_i]['bbox_info']
+            
+            depth_img_path = os.path.join(IMAGES_PATH, "depth_pts", "images", required_image)
+            depth_img = cv2.imread(depth_img_path, 1)
+            
+            for j1 in range(len(trans_bboxes)):
+                x1,y1,x2,y2 = trans_bboxes[j1]['box_coordinates']
+                depth_img = cv2.rectangle(depth_img, (x1,y1), (x2,y2),(30,255,30), 2)
+            for j2 in range(len(ann_bboxes)):
+                x1,y1,x2,y2 = ann_bboxes[j2]['box_coordinates']
+                depth_img = cv2.rectangle(depth_img, (x1,y1), (x2,y2),(255,0,30), 2)
+
+    if depth_img is not None:
+        cv2.imwrite((os.path.join(DEBUG_PATHS[0],required_image)),depth_img)
+
+def write_rgb_to_disk(index, orig_rgb_dict):
+    rgb_img = None
+    rgb_img_name = orig_rgb_dict['annotations'][index]["original_image_path"]
+    rgb_img = cv2.imread(os.path.join(IMAGES_PATH, "camtop_raw", "images", 
+                                        rgb_img_name), 1)
+    bboxes = orig_rgb_dict['annotations'][index]['bbox_info']
+    for j in range(len(bboxes)):
+        x1,y1,x2,y2 = bboxes[j]['box_coordinates']
+        rgb_img = cv2.rectangle(rgb_img, (x1,y1), (x2,y2),(30,255,30), 3)
+    
+    if rgb_img is not None:
+        cv2.imwrite((os.path.join(DEBUG_PATHS[1],rgb_img_name)),rgb_img)
+            
+
+if __name__ == '__main__':
+    transformed_rgb_dict, orig_rgb_dict = transform_rgb_json()
+    depth_dict = get_depth_data()
+    depth_dict_with_IOU, IOU_list = record_IOU(depth_dict, transformed_rgb_dict)
+    calc_average_IOU(IOU_list)
+    write_meta(depth_dict)
+    if DEV_DEBUG:
+        collate_debug_images(transformed_rgb_dict, depth_dict, orig_rgb_dict)
+```
+
+In the above script, the *collate debug images* function uses pool to specify the max no. of threads before each multi-threading run.
+
+This multi-threading takes an iterable and a specific target function just like multi-processing.
+
+Also, since the jsons are input to the target function multiple times (without any change), they can be zipped and iterated using **repeat** as shown:
+
+```python
+def collate_debug_images(trans_rgb_dict, depth_dict, orig_rgb_dict):
+    # create folders to put debug images in
+    for path in DEBUG_PATHS:
+        if not os.path.exists(path):
+            os.makedirs(path)
+    '''
+    wrtiing rgb to disk
+    '''
+    # define threads for multi-threading
+    pool = Pool(15)
+    # multi-threading for processing rgb images
+    rgb_argument_list = range(len(orig_rgb_dict['annotations'])) 
+    with pool as p:
+        p.starmap(write_rgb_to_disk, zip(rgb_argument_list, repeat(orig_rgb_dict)))
+    print("finished writing rgb images to disk")
+    
+    '''
+    writing depth to disk
+    '''
+    # define threads for multi-threading
+    pool = Pool(15)
+    # multi-threading for processing depth images
+    depth_argument_list = range(len(trans_rgb_dict['annotations']))
+    with pool as p:
+        p.starmap(write_depth_to_disk, zip(depth_argument_list, repeat(trans_rgb_dict), repeat(depth_dict)))
+    print("finished writing depth images to disk")
+```
+
+
 # User Inputs using argparse
 
 This is a simple libraray which allows user to give arguments when running code along with some *tags*
