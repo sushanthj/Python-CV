@@ -110,8 +110,8 @@ Using the json above as reference, we can iterate over 'annotations' which is a 
 Also, IOU will be computed for each matching image between rgb and depth. \
 The jsons for the same are given below:
 
-![](/code/orig_sync_first_run_depth.json)
-![](/code/orig_sync_first_run_rgb.json)
+![depth_json](/code/orig_sync_first_run_depth.json)
+![rgb_json](/code/orig_sync_first_run_rgb.json)
 
 ```python
 from itertools import repeat
