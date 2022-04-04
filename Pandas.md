@@ -47,8 +47,6 @@ import os
 import copy
 import glob
 
-from scipy.misc import electrocardiogram
-
 my_dir_path = "/home/sush/TS/e2e_test/eval_sj"
 
 collated_data = defaultdict(list)
@@ -61,6 +59,7 @@ for file in sorted(glob.glob(os.path.join(my_dir_path, '*.txt'))):
             elements = line.split("\n")[0].split('camID ')[1].split(" ")
             # save data according to camID (which is the element[0] in each line)
             collated_data[elements[0]].append(elements[1])
+            # multiply by 1000 so that downstream ops give time in milliseconds
             collated_data[elements[0]].append((float(elements[2])*1000))
         
     # Note. If the data for each index (here camID) does not match the lenght of data in other datapoints, 
@@ -75,28 +74,47 @@ for file in sorted(glob.glob(os.path.join(my_dir_path, '*.txt'))):
 dframe = pd.DataFrame.from_dict(collated_data)
 # the above created df will have camID as columns, we want it to be row-wise therefore transpose
 dframe = dframe.transpose()
-# sort the columns according to name
+
+#dframe.to_csv(os.path.join(my_dir_path, 'evaluation_test.csv'))
 
 proc_time_column_no = 0
 handover_column_no = 1
-print("text file count is", file_count)
+proc_column_list = []
+handover_column_list = []
+print("No. of nodes profiled is ", file_count)
 for i in range(int(file_count/2)):
-    if i < file_count-1:
-        proc_time_column_no += 4
-        handover_column_no += 4
+    if i == 0:
+        proc_time_column_no = proc_time_column_no + 4
+        handover_column_no = handover_column_no + 4
+        handover_column_list.append(handover_column_no)
+        print("adding column no. {} and {}".format(proc_time_column_no, handover_column_no))
+        dframe.insert(proc_time_column_no, 'proc_time_' + str(i), None)
+        dframe.insert(handover_column_no, 'handover_' + str(i), None)
+    elif i < ((file_count/2)-1):
+        proc_time_column_no = proc_time_column_no + 4 + 2
+        handover_column_no = handover_column_no + 4 + 2
+        handover_column_list.append(handover_column_no)
+        print("adding column no. {} and {}".format(proc_time_column_no, handover_column_no))
         dframe.insert(proc_time_column_no, 'proc_time_' + str(i), None)
         dframe.insert(handover_column_no, 'handover_' + str(i), None)
     else:
-        proc_time_column_no += 4
+        proc_time_column_no = proc_time_column_no + 4 + 2
+        print("adding end proc column no. {}".format(proc_time_column_no))
         dframe.insert(proc_time_column_no, 'proc_time_' + str(i), None)
+    
+    proc_column_list.append(proc_time_column_no)
 
-#print(dframe)
-
-for i in range(int(file_count/2)):
-    time_columns = [((i+1)*4)-1, ((i+1)*4)-3] 
+for i in range(len(proc_column_list)):
+    # populate the proc time columns
+    in_out_time_columns = [((i+1)*4)-1, ((i+1)*4)-3] 
     preproc_column_name = "proc_time_" + str(i)
-    dframe[preproc_column_name] = dframe[time_columns[0]] - dframe[time_columns[1]]
+    dframe[preproc_column_name] = dframe[in_out_time_columns[0]] - dframe[in_out_time_columns[1]]
+    # populate the handover time columns
+    if i < (len(proc_column_list)-1):
+        handover_column_name = "handover_" + str(i)
+        handover_time_columns = [((i+1)*4)+1, ((i+1)*4)-1]
+        dframe[handover_column_name] = dframe[handover_time_columns[0]] - dframe[handover_time_columns[1]]
 
-#print(dframe)
+#print(dframe[0])
 dframe.to_csv(os.path.join(my_dir_path, 'evaluation.csv'))
 ```
