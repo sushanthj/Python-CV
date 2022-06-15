@@ -94,6 +94,33 @@ ball = img[280:340, 330:390]
 img[273:333, 100:160] = ball
 ```
 
+## Filter an image based on hsv values
+```python
+hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+
+# We define a region in HSV space with the following lower/upper bounds:
+lower_hsv = np.array([171, 140, 0])
+upper_hsv = np.array([179, 200, 255])
+
+# The two arrays have 3 components: H(ue), S(aturation), V(value).
+"""
+The first array are the lower bounds; the second array are the upper bounds.
+
+This means that we are going to select the pixels that have:
+
+Hue between OpenCV value 171 and 179, which are regular Hue values 342 to 358.
+Saturation between 140 and 200.
+Value between 0 and 255.
+The hue is closest to what we intuitively call "color" and the one to use to do simple processing
+"""
+# Returns a matrix of 0 or 1 that satisfy the constraint
+mask = cv2.inRange(hsv, lower_hsv, upper_hsv)
+
+# Get a "masked image"
+masked = cv2.bitwise_and(image, image, mask=mask)
+cv2.imshow(masked)
+```
+
 ## Grayscale and Thresholding
 
 There are two common color spaces used in OpenCV\
