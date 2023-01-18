@@ -410,3 +410,86 @@ Also observe that the 'ir' and 'br' tags have an extra argument called **nargs**
 In our case, user input '-ir CottonBlurred CottonShadow' will return a list = ['CottonBlurred', 'CottonShadow']
 
 Furthermore, initialising json_path is like initialising any other variable
+
+# Working with .yaml files
+
+- These files are commonly used to save parameters in a dictionary format
+- They can directly convert a python dictionary to a yaml and dump the file in a folder
+
+## Simple script to show working of yaml library in python
+
+```python
+## init py
+import yaml
+
+## init data
+dct_str = {'Pools': [['10', ' 10.127.128.0', ' 18'],
+                     ['20', ' 10.127.129.0', ' 19'],
+                     ['30', ' 10.127.130.0', ' 20']]}
+
+## print result
+print yaml.safe_dump(dct_str)
+```
+
+Output:
+```
+Pools:
+- ['10', ' 10.127.128.0', ' 18']
+- ['20', ' 10.127.129.0', ' 19']
+- ['30', ' 10.127.130.0', ' 20']
+```
+
+## Example yaml file
+
+```yaml
+# Where to put output files
+path_prefix: "/home/workspace/processing/"
+
+###############################################################################
+# Overall directories
+###############################################################################
+
+stage0_extraction_dir: "stage0_extraction"
+stage1_segmentation_dir: "stage1_segmentation"
+stage2_depth_dir: "stage2_depth"
+stage3_qr_detection_dir: "stage3_qr_detection"
+stage4_foreground_dir: "stage4_foreground"
+stage5_icp_tightening_dir: "stage5_icp_tightening"
+stage6_startergraph_dir: "stage6_startergraph"
+stage7_min_span_tree_dir: "stage7_min_span_tree"
+stage8_ellipse_likelihoods_dir: "stage8_ellipse_likelihoods"
+stage9_ellipse_skeletonization_dir: "stage9_ellipse_skeletonization"
+stage10_skmetric_dir: "stage10_skeleton_metrics"
+# stage6_pole_dir: "stage6_pole"
+# stage7_mesh_skeleton_dir: "stage7_mesh_skeleton"
+
+
+###############################################################################
+# Settings
+###############################################################################
+
+stage5_trust_settings:
+# High removal
+- - search_radius: 0.05
+    cutoff_ratio: 1.25
+    search_ratio: 1
+
+
+# Decides whether or not to apply density (neighbor count) to the starter graph
+# so that denser areas have lower cost
+# THIS IS A LIST and you can run with both if you want (branch)
+stage6_use_density:
+- true
+
+# This is the size of the voxellization that is used for the fully connected
+# starter graph. Finer will obviously result in a longer runtime
+stage6_starter_voxel_sizes:
+- 0.02
+
+# These are the cloud(s) that will be used to assess the quality of a skeleton.
+# I think they should be more full than the clouds used to generate them.
+# THIS IS A LIST and you can concatenate multiple clouds together.
+stage7_assessment_clouds:
+- "class_1_skeldilate_0.ply"
+```
+
